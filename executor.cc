@@ -140,6 +140,7 @@ int Buffer::LRU()
   int pageId = candidate.back();
   //delete it from the LRU list
   candidate.pop_back();
+  // the below fails b/c it tries do bool == int in the include due to pair
   //vector< pair<int, bool> >::iterator i = find(bufferpool.begin(), bufferpool.end(), pageId);
   //find it's position in the buffer pool
   //int index = distance(bufferpool.begin(), i);
