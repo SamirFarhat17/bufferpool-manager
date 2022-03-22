@@ -3,6 +3,8 @@
 
 #include <iostream>
 #include <vector>
+#include <unordered_map>
+#include <list>
 
 using namespace std;
 
@@ -15,9 +17,16 @@ namespace bufmanager {
 
     private:
     Buffer(Simulation_Environment* _env);
+ 
     static Buffer* buffer_instance;
+    
 
     public:
+    
+    //initizate bufferpool with <page size, dirty page bit>
+    vector< pair<int, bool> > bufferpool;
+    //deck as the lru candidate list
+    deque<int> candidate;
     static long max_buffer_size;  //in pages
     
     static Buffer* getBufferInstance(Simulation_Environment* _env);
@@ -26,8 +35,8 @@ namespace bufmanager {
     static int buffer_miss;
     static int read_io;
     static int write_io;
-
     int LRU();
+    void update_lru(deque<int> candidate, int pageId, int pos, bool hit);
     int LRUWSR();
 
     static int printBuffer();
