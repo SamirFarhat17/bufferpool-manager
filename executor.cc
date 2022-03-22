@@ -140,10 +140,11 @@ int Buffer::LRU()
   int pageId = candidate.back();
   //delete it from the LRU list
   candidate.pop_back();
-  vector< pair<int, bool> >::iterator i = find(bufferpool.begin(), bufferpool.end(), pageId);
+  //vector< pair<int, bool> >::iterator i = find(bufferpool.begin(), bufferpool.end(), pageId);
   //find it's position in the buffer pool
-  int index = distance(bufferpool.begin(), i);
-  return index;
+  //int index = distance(bufferpool.begin(), i);
+  //return index;
+  return 0;
 }
 
 int Buffer::LRUWSR()
