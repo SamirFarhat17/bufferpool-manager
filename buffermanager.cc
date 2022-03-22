@@ -38,11 +38,12 @@ int main(int argc, char *argvx[])
     // Generate Workload
     WorkloadGenerator workload_generator;
     workload_generator.generateWorkload();
+    cout << "generation succeed" << endl;
 
     // Execute Workload
     int s = runWorkload(_env); 
   }
-
+  //Buffer::printBuffer();
   // Print Different Statistics
   Buffer::printStats();
   return 0;
@@ -53,6 +54,7 @@ int runWorkload(Simulation_Environment* _env) {
 
   // This method opens the workload file and according to the workload calls executor's read() or write() method
   Buffer* buffer_instance = Buffer::getBufferInstance(_env);
+  //cout << "initiation checked" << endl;
   bufmanager::WorkloadExecutor workload_executer;
   ifstream workload_file;
   workload_file.open("workload.txt");
