@@ -1,6 +1,6 @@
  
 #include "parameter.h"
-
+#include <deque>
 #include <iostream>
 #include <vector>
 #include <unordered_map>
