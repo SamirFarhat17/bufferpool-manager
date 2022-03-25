@@ -104,6 +104,50 @@ int WorkloadExecutor::read(Buffer* buffer_instance, int pageId, int algorithm)
 int WorkloadExecutor::write(Buffer* buffer_instance, int pageId, int algorithm)
 {
   // Implement Write in the Bufferpool
+  int cur_size = buffer_instance->bufferpool.size();
+  int capacity = buffer_instance->max_buffer_size;
+  int pos = search(buffer_instance, pageId);
+  //if page is already in the bufferpool, update it
+  if(pos != -1){
+    //found, only need to update lru
+    deque<int>::iterator it=buffer_instance->candidate.begin();
+    while(*it != pageId) it++;
+    buffer_instance->candidate.erase(it);
+    buffer_instance->candidate.push_front(pageId);
+    //marking the page as dirty bc it's been updated
+    buffer_instance->bufferpool.push_back(make_pair(pageId, true));
+
+  }
+  //otherwise this is a miss
+  else{
+    //if bufferpool isnt empty, simply add the page
+    if(cur_size < capacity){
+      //read the page from disk, mark the page dirty since we are updatin git
+      buffer_instance->bufferpool.push_back(make_pair(pageId, true));
+      buffer_instance->read_io += 1;
+    }
+    //otherwise, the cache is full
+    else{
+      //find the position to evict
+      int pos = buffer_instance->LRU();
+      //if the page is dirty, write the page into the disk
+      if(buffer_instance->bufferpool[pos].second = true){
+        buffer_instance->write_io += 1;
+      }
+      //erase the target page
+      buffer_instance->bufferpool[pos].first = -1;
+      buffer_instance->bufferpool[pos].second = false;
+
+      //put new page in the blank, and then set that page to be dirty
+      buffer_instance->bufferpool[pos].first = pageId;
+      buffer_instance->bufferpool[pos].second = true;
+      //add read_io
+      buffer_instance->read_io += 1;
+
+    }
+  }
+
+
 
   return 1;
 }
