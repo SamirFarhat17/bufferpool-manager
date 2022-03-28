@@ -24,10 +24,14 @@ Buffer::Buffer(Simulation_Environment *_env)
 {
   //candidate is for LRU list 
   candidate.clear();
-  // //initialize the cache
-  // for(int i = 0; i < max_buffer_size; i++){
-  //   bufferpool.push_back(make_pair(-1, false));
-  // }
+<<<<<<< HEAD
+
+=======
+  //initialize the cache
+  for(int i = 0; i < max_buffer_size; i++){
+    bufferpool.push_back(make_pair(-1, false));
+  }
+>>>>>>> origin/mia
 }
 
 Buffer *Buffer::getBufferInstance(Simulation_Environment *_env)
@@ -39,8 +43,11 @@ Buffer *Buffer::getBufferInstance(Simulation_Environment *_env)
 //search in the bufferpool
 int WorkloadExecutor::search(Buffer* buffer_instance, int pageId)
 { //simply perform linear search
-  //cout << " search" <<endl;
-  for(int i = 0; i < buffer_instance->bufferpool.size(); i++){
+<<<<<<< HEAD
+  
+=======
+  for(int i = 0; i < buffer_instance->max_buffer_size; i++){
+>>>>>>> origin/mia
     //find the page in the bufferpool, hit
     if(buffer_instance->bufferpool[i].first == pageId){
       buffer_instance->buffer_hit += 1;
@@ -57,7 +64,49 @@ int WorkloadExecutor::read(Buffer* buffer_instance, int pageId, int algorithm)
 { int cur_size = buffer_instance->bufferpool.size();
   int capacity = buffer_instance->max_buffer_size;
   int pos = search(buffer_instance, pageId);
-  cout << cur_size << " "<< capacity << " " << pos << endl;
+<<<<<<< HEAD
+=======
+  
+  if(pos != -1){
+    //found, only need to update lru
+    deque<int>::iterator it=buffer_instance->candidate.begin();
+    while(*it != pageId) it++;
+    buffer_instance->candidate.erase(it);
+    buffer_instance->candidate.push_front(pageId);
+  }
+  //miss
+  else{
+    //cache is not full
+    if(cur_size < capacity){
+      //read the page from disk, mark the page clean
+      buffer_instance->bufferpool.push_back(make_pair(pageId, false));
+      //add read_io
+      buffer_instance->read_io += 1;
+
+    }
+    //cache is full
+    else{
+      //find the position to evict
+      int pos = buffer_instance->LRU();
+      //if the page is dirty, write the page into the disk
+      if(buffer_instance->bufferpool[pos].second = true){
+        buffer_instance->write_io += 1;
+      }
+      //erase the target page
+      buffer_instance->bufferpool[pos].first = -1;
+      buffer_instance->bufferpool[pos].second = false;
+
+      //put new page in the blank
+      buffer_instance->bufferpool[pos].first = pageId;
+      //add read_io
+      buffer_instance->read_io += 1;
+      
+    }
+    //update lru
+    buffer_instance->candidate.push_front(pageId);
+
+  }
+>>>>>>> origin/mia
 
   if(pos != -1){
     //found, only need to update lru
@@ -120,24 +169,39 @@ int WorkloadExecutor::unpin(Buffer* buffer_instance, int pageId)
   return -1;
 }
 
+<<<<<<< HEAD
+
+=======
+// void Buffer::update_lru(deque< pair<int, int> > candidate, int pageId, int pos, bool hit){
+//   if(hit == true){
+//     deque< pair<int, int> >::iterator it=candidate.begin();
+//     while(it->first != pageId){
+//             it++;
+//         }
+//     candidate.erase(it);
+//     candidate.push_front(make_pair(pageId, pos));
+//   }
+//   else{
+//     if(buffer_instance->bufferpool.size() < buffer_instance->max_buffer_size){
+//       deque<int>::iterator it=cache.begin();
+//       while(*it!=key)it++;
+//       cache.erase(it);
+//       map.erase(key);
+//     }
+
+//   }
+// }
+
 //return the evict position in bufferpool 
 int Buffer::LRU()
 { //get the least used page id 
-  int index = -1;
   int pageId = candidate.back();
   //delete it from the LRU list
   candidate.pop_back();
-  // the below fails b/c it tries do bool == int in the include due to pair
-  //vector< pair<int, bool> >::iterator i = find(bufferpool.begin(), bufferpool.end(), pageId);
+  vector< pair<int, bool> >::iterator i = find(bufferpool.begin(), bufferpool.end(), pageId);
   //find it's position in the buffer pool
-  //int index = distance(bufferpool.begin(), i);
-  //return index;
-  for(int i = 0; i < bufferpool.size(); i++){
-    if(pageId == bufferpool[i].first){
-      index = i;
-      break;
-    }
-  }
+  int index = distance(bufferpool.begin(), i);
+>>>>>>> origin/mia
   return index;
 }
 
