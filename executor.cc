@@ -3,6 +3,7 @@
 #include <sys/time.h>
 #include <vector>
 #include <cstdlib>
+#include <stdint.h>
 #include <algorithm>
 #include <iomanip>
 #include <fstream>
@@ -10,7 +11,6 @@
 #include "parameter.h"
 #include "executor.h"
 
-using namespace std;
 using namespace bufmanager;
 
 Buffer *Buffer::buffer_instance;
@@ -232,7 +232,7 @@ int Buffer::LRU()
   int pageId = candidate.back();
   //delete it from the LRU list
   candidate.pop_back();
-  vector< pair<int, bool> >::iterator i = find(bufferpool.begin(), bufferpool.end(), pageId);
+  vector<pair<int, bool> >::iterator i = find(bufferpool.begin(), bufferpool.end(), pageId);
   //find it's position in the buffer pool
   int index = distance(bufferpool.begin(), i);
   return index;
@@ -247,6 +247,11 @@ int Buffer::LRUWSR()
 
 int Buffer::printBuffer()
 {
+  int counter = 0;
+  for(std::pair<int, bool> page : buffer_instance->bufferpool) {
+    std::cout << "Page: " << counter << " Data: " << page.first << " Dirty-Bit: " << page.second << endl;
+    counter++;
+  }
   return 0;
 }
 
