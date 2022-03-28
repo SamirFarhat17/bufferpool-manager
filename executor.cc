@@ -24,14 +24,12 @@ Buffer::Buffer(Simulation_Environment *_env)
 {
   //candidate is for LRU list 
   candidate.clear();
-<<<<<<< HEAD
 
-=======
+
   //initialize the cache
   for(int i = 0; i < max_buffer_size; i++){
     bufferpool.push_back(make_pair(-1, false));
   }
->>>>>>> origin/mia
 }
 
 Buffer *Buffer::getBufferInstance(Simulation_Environment *_env)
@@ -43,11 +41,8 @@ Buffer *Buffer::getBufferInstance(Simulation_Environment *_env)
 //search in the bufferpool
 int WorkloadExecutor::search(Buffer* buffer_instance, int pageId)
 { //simply perform linear search
-<<<<<<< HEAD
-  
-=======
+
   for(int i = 0; i < buffer_instance->max_buffer_size; i++){
->>>>>>> origin/mia
     //find the page in the bufferpool, hit
     if(buffer_instance->bufferpool[i].first == pageId){
       buffer_instance->buffer_hit += 1;
@@ -64,9 +59,7 @@ int WorkloadExecutor::read(Buffer* buffer_instance, int pageId, int algorithm)
 { int cur_size = buffer_instance->bufferpool.size();
   int capacity = buffer_instance->max_buffer_size;
   int pos = search(buffer_instance, pageId);
-<<<<<<< HEAD
-=======
-  
+
   if(pos != -1){
     //found, only need to update lru
     deque<int>::iterator it=buffer_instance->candidate.begin();
@@ -75,7 +68,7 @@ int WorkloadExecutor::read(Buffer* buffer_instance, int pageId, int algorithm)
     buffer_instance->candidate.push_front(pageId);
   }
   //miss
-  else{
+  else {
     //cache is not full
     if(cur_size < capacity){
       //read the page from disk, mark the page clean
@@ -106,7 +99,6 @@ int WorkloadExecutor::read(Buffer* buffer_instance, int pageId, int algorithm)
     buffer_instance->candidate.push_front(pageId);
 
   }
->>>>>>> origin/mia
 
   if(pos != -1){
     //found, only need to update lru
@@ -118,7 +110,7 @@ int WorkloadExecutor::read(Buffer* buffer_instance, int pageId, int algorithm)
     buffer_instance->candidate.push_front(pageId);
   }
   //miss
-  else{
+  else {
     //cache is not full
     if(cur_size < capacity){
       //read the page from disk, mark the page clean
@@ -149,9 +141,9 @@ int WorkloadExecutor::read(Buffer* buffer_instance, int pageId, int algorithm)
     buffer_instance->candidate.push_front(pageId);
 
   }
-  cout << "LRU List ";
-  for (deque<int>::iterator it = buffer_instance->candidate.begin(); it != buffer_instance->candidate.end(); ++it) cout << ' ' << *it;
-  cout << endl;
+  std::cout << "LRU List ";
+  for (deque<int>::iterator it = buffer_instance->candidate.begin(); it != buffer_instance->candidate.end(); ++it) std::cout << ' ' << *it;
+  std::cout << endl;
   return -1;
 }
 
@@ -169,9 +161,7 @@ int WorkloadExecutor::unpin(Buffer* buffer_instance, int pageId)
   return -1;
 }
 
-<<<<<<< HEAD
 
-=======
 // void Buffer::update_lru(deque< pair<int, int> > candidate, int pageId, int pos, bool hit){
 //   if(hit == true){
 //     deque< pair<int, int> >::iterator it=candidate.begin();
@@ -201,7 +191,6 @@ int Buffer::LRU()
   vector< pair<int, bool> >::iterator i = find(bufferpool.begin(), bufferpool.end(), pageId);
   //find it's position in the buffer pool
   int index = distance(bufferpool.begin(), i);
->>>>>>> origin/mia
   return index;
 }
 
