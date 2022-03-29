@@ -201,6 +201,13 @@ int Buffer::LRUWSR()
 
 int Buffer::printBuffer()
 {
+  cout << "*******************************************************" <<endl;
+  for(int i = 0; i < buffer_instance->max_buffer_size; i++){
+    //find the page in the bufferpool, hit
+    int temp = buffer_instance->bufferpool[i].first;
+    cout << temp << "|" << endl;
+  }
+  cout << "*******************************************************" <<endl;
   return -1;
 }
 
