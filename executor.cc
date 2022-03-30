@@ -229,12 +229,21 @@ int WorkloadExecutor::unpin(Buffer* buffer_instance, int pageId)
 //return the evict position in bufferpool 
 int Buffer::LRU()
 { //get the least used page id 
+  int index = -1;
   int pageId = candidate.back();
   //delete it from the LRU list
   candidate.pop_back();
-  vector<pair<int, bool> >::iterator i = find(bufferpool.begin(), bufferpool.end(), pageId);
+  // the below fails b/c it tries do bool == int in the include due to pair
+  //vector< pair<int, bool> >::iterator i = find(bufferpool.begin(), bufferpool.end(), pageId);
   //find it's position in the buffer pool
-  int index = distance(bufferpool.begin(), i);
+  //int index = distance(bufferpool.begin(), i);
+  //return index;
+  for(int i = 0; i < bufferpool.size(); i++){
+    if(pageId == bufferpool[i].first){
+      index = i;
+      break;
+    }
+  }
   return index;
 }
 
