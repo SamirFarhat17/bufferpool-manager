@@ -150,19 +150,20 @@ int WorkloadExecutor::write(Buffer* buffer_instance, int pageId, int algorithm)
       //add read_io
       buffer_instance->read_io += 1;
 
-    }
+    } 
+    return -1;
   }
-
+ 
 
 
   return 1;
 }
 //is not applicable in this program setting, ignore
-int WorkloadExecutor::unpin(Buffer* buffer_instance, int pageId)
-{
+//int WorkloadExecutor::unpin(Buffer* buffer_instance, int pageId)
+//{
   // This is optional
-  return -1;
-}
+  //return -1;
+//}
 
 
 // void Buffer::update_lru(deque< pair<int, int> > candidate, int pageId, int pos, bool hit){
@@ -189,19 +190,21 @@ int WorkloadExecutor::unpin(Buffer* buffer_instance, int pageId)
 int Buffer::LRU()
 { //get the least used page id 
   int index = -1;
-  int pageId = candidate.back();
+  if(candidate.size() > 0){
+    int pageId = candidate.back();
   //delete it from the LRU list
-  candidate.pop_back();
+    candidate.pop_back();
   // the below fails b/c it tries do bool == int in the include due to pair
   //vector< pair<int, bool> >::iterator i = find(bufferpool.begin(), bufferpool.end(), pageId);
   //find it's position in the buffer pool
   //int index = distance(bufferpool.begin(), i);
   //return index;
-  for(int i = 0; i < bufferpool.size(); i++){
-    if(pageId == bufferpool[i].first){
-      index = i;
-      break;
-    }
+    for(int i = 0; i < bufferpool.size(); i++){
+      if(pageId == bufferpool[i].first){
+        index = i;
+        break;
+      }
+    } 
   }
   return index;
 }
