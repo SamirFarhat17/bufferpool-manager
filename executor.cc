@@ -100,47 +100,6 @@ int WorkloadExecutor::read(Buffer* buffer_instance, int pageId, int algorithm)
 
   }
 
-  if(pos != -1){
-    //found, only need to update lru
-    deque<int>::iterator it=buffer_instance->candidate.begin();
-    //cout << "check iterator f" << endl;
-    while(*it != pageId) it++;
-    //cout << "check iterator b" << endl;
-    buffer_instance->candidate.erase(it);
-    buffer_instance->candidate.push_front(pageId);
-  }
-  //miss
-  else {
-    //cache is not full
-    if(cur_size < capacity){
-      //read the page from disk, mark the page clean
-      buffer_instance->bufferpool.push_back(make_pair(pageId, false));
-      //add read_io
-      buffer_instance->read_io += 1;
-
-    }
-    //cache is full
-    else{
-      //find the position to evict
-      int pos = buffer_instance->LRU();
-      //if the page is dirty, write the page into the disk
-      if(buffer_instance->bufferpool[pos].second == true){
-        buffer_instance->write_io += 1;
-      }
-      //erase the target page
-      buffer_instance->bufferpool[pos].first = -1;
-      buffer_instance->bufferpool[pos].second = false;
-
-      //put new page in the blank
-      buffer_instance->bufferpool[pos].first = pageId;
-      //add read_io
-      buffer_instance->read_io += 1;
-      
-    }
-    //update lru
-    buffer_instance->candidate.push_front(pageId);
-
-  }
   std::cout << "LRU List ";
   for (deque<int>::iterator it = buffer_instance->candidate.begin(); it != buffer_instance->candidate.end(); ++it) std::cout << ' ' << *it;
   std::cout << endl;
