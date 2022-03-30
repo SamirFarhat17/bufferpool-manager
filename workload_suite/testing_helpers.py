@@ -1,6 +1,7 @@
 def build_command(b, n, x, e, s, d, a):
     command = "./../buffermanager -b {} -n {} -x {} -e {} " \
-              "-s {} -d {} -a {}".format(b, n, x, e, s, d, a)
+              "-s {} -d {} -a {} > {}".format(b, n, x, e, s, d, a, 
+		      file_name(b, n, x, e, s, d, a, "txt"))
     return command
 
 
@@ -10,7 +11,8 @@ def test_algo(b, n, x, e, s, d, algo):
     return command
 
 
-def write_file(b, n, x, e, s, d, a):
-    filepath = "raw_results/buffersize_{}_disksize_{}_numops_{}_" \
+def file_name(b, n, x, e, s, d, a, extension):
+    file_path = "raw_results/buffersize_{}_disksize_{}_numops_{}_" \
                "rw_{}_skewedperct_{}_skeweddataperct{}_algorithm_{}" \
-               ".json".format(b, n, x, e, s, d, a)
+               ".{}".format(b, n, x, e, s, d, a, extension)
+    return file_path
