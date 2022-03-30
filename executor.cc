@@ -27,9 +27,9 @@ Buffer::Buffer(Simulation_Environment *_env)
 
 
   //initialize the cache
-  for(int i = 0; i < max_buffer_size; i++){
-    bufferpool.push_back(make_pair(-1, false));
-  }
+  // for(int i = 0; i < max_buffer_size; i++){
+  //   bufferpool.push_back(make_pair(-1, false));
+  // }
 }
 
 Buffer *Buffer::getBufferInstance(Simulation_Environment *_env)
@@ -41,7 +41,10 @@ Buffer *Buffer::getBufferInstance(Simulation_Environment *_env)
 //search in the bufferpool
 int WorkloadExecutor::search(Buffer* buffer_instance, int pageId)
 { //simply perform linear search
-
+  //cout << ("????");
+  if(buffer_instance->bufferpool.size() == 0){
+    return -1;
+  }
   for(int i = 0; i < buffer_instance->max_buffer_size; i++){
     //find the page in the bufferpool, hit
     if(buffer_instance->bufferpool[i].first == pageId){
@@ -80,9 +83,10 @@ int WorkloadExecutor::read(Buffer* buffer_instance, int pageId, int algorithm)
     //cache is full
     else{
       //find the position to evict
+      //cout << "enter LRU func!!!" << endl;
       int pos = buffer_instance->LRU();
       //if the page is dirty, write the page into the disk
-      if(buffer_instance->bufferpool[pos].second = true){
+      if(buffer_instance->bufferpool[pos].second == true){
         buffer_instance->write_io += 1;
       }
       //erase the target page
@@ -100,7 +104,7 @@ int WorkloadExecutor::read(Buffer* buffer_instance, int pageId, int algorithm)
 
   }
 
-  std::cout << "LRU List ";
+  std::cout << "READ LRU List ";
   for (deque<int>::iterator it = buffer_instance->candidate.begin(); it != buffer_instance->candidate.end(); ++it) std::cout << ' ' << *it;
   std::cout << endl;
   return -1;
@@ -115,13 +119,15 @@ int WorkloadExecutor::write(Buffer* buffer_instance, int pageId, int algorithm)
   int pos = search(buffer_instance, pageId);
   //if page is already in the bufferpool, update it
   if(pos != -1){
-    //found, only need to update lru
+    //found, update lru
     deque<int>::iterator it=buffer_instance->candidate.begin();
     while(*it != pageId) it++;
     buffer_instance->candidate.erase(it);
     buffer_instance->candidate.push_front(pageId);
     //marking the page as dirty bc it's been updated
-    buffer_instance->bufferpool.push_back(make_pair(pageId, true));
+    //buffer_instance->bufferpool.push_back(make_pair(pageId, true));
+    //BUG FIXED
+    buffer_instance->bufferpool[pos].second = true;
 
   }
   //otherwise this is a miss
@@ -137,26 +143,29 @@ int WorkloadExecutor::write(Buffer* buffer_instance, int pageId, int algorithm)
       //find the position to evict
       int pos = buffer_instance->LRU();
       //if the page is dirty, write the page into the disk
-      if(buffer_instance->bufferpool[pos].second = true){
+      if(buffer_instance->bufferpool[pos].second == true){
         buffer_instance->write_io += 1;
       }
       //erase the target page
       buffer_instance->bufferpool[pos].first = -1;
       buffer_instance->bufferpool[pos].second = false;
-
+      //add read_io
+      buffer_instance->read_io += 1;
       //put new page in the blank, and then set that page to be dirty
       buffer_instance->bufferpool[pos].first = pageId;
       buffer_instance->bufferpool[pos].second = true;
-      //add read_io
-      buffer_instance->read_io += 1;
+      
 
-    } 
-    return -1;
+    }
+    //update lru 
+    //BUG FIXED
+    buffer_instance->candidate.push_front(pageId);
+    //return -1;
   }
- 
-
-
-  return 1;
+  std::cout << "WRITE LRU List ";
+  for (deque<int>::iterator it = buffer_instance->candidate.begin(); it != buffer_instance->candidate.end(); ++it) std::cout << ' ' << *it;
+  std::cout << endl;
+  return -1;
 }
 //is not applicable in this program setting, ignore
 //int WorkloadExecutor::unpin(Buffer* buffer_instance, int pageId)
@@ -190,6 +199,7 @@ int WorkloadExecutor::write(Buffer* buffer_instance, int pageId, int algorithm)
 int Buffer::LRU()
 { //get the least used page id 
   int index = -1;
+  //cout << candidate.size() << endl;
   if(candidate.size() > 0){
     int pageId = candidate.back();
   //delete it from the LRU list
