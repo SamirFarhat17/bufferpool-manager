@@ -3,9 +3,9 @@ message: "If you use this software, please cite it as below."
 authors:
   - family-names: Farhat Dominguez
     given-names: Samir
-    - family-names: Li
+  - family-names: Li
     given-names: Yuxin
-    - family-names: Yipchoy
+  - family-names: Yipchoy
     given-names: Stephany
 title: "Bufferpool Manager"
 date-released: 2022-05-11
