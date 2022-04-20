@@ -2,8 +2,7 @@
 
 using namespace std;
 
-class WorkloadGenerator
-{
+class WorkloadGenerator {
   public:
-  static int generateWorkload(); 
+    static int generateWorkload();
 };
