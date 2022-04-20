@@ -23,14 +23,12 @@ int Buffer::write_io = 0;
 
 
 Buffer::Buffer(Simulation_Environment *_env) {
-    //candidate is for LRU list
+    // candidate is for LRU list
     candidate.clear();
     max_buffer_size = _env->buffer_size_in_pages;
 
-    //initialize the cache
-    // for(int i = 0; i < max_buffer_size; i++){
-    //   bufferpool.push_back(make_pair(-1, false));
-    // }
+	// initialize the cache
+	// for(int i = 0; i < max_buffer_size; i++) bufferpool.push_back(make_pair(-1, false));
 }
 
 
@@ -40,17 +38,17 @@ Buffer *Buffer::getBufferInstance(Simulation_Environment *_env) {
 }
 
 
-//search in the bufferpool
+// search in the bufferpool
 int WorkloadExecutor::search(Buffer* buffer_instance, int pageId, int algorithm) {
     switch (algorithm) {
-		//1 -> LRU
+		// 1 -> LRU
 		case 1: {
-			//the bufferpool still empty
+			// the bufferpool still empty
 			if(buffer_instance->bufferpool.size() == 0) {
 				return -1;
 			}
 			for(int i = 0; i < buffer_instance->max_buffer_size; i++) {
-				//find the page in the bufferpool, hit
+				// find the page in the bufferpool, hit
 				if(buffer_instance->bufferpool[i].first == pageId) {
 					buffer_instance->buffer_hit += 1;
 					return i;
@@ -58,13 +56,13 @@ int WorkloadExecutor::search(Buffer* buffer_instance, int pageId, int algorithm)
 			}
 			break;
 		}
-		//2 -> LRU_WSR
+		// 2 -> LRU_WSR
 		case 2: {
 			if(buffer_instance->bufferpool_wsr.size() == 0) {
 				return -1;
 			}
 			for(int i = 0; i < buffer_instance->max_buffer_size; i++) {
-				//find the page in the bufferpool, hit
+				// find the page in the bufferpool, hit
 				if(get<0>(buffer_instance->bufferpool_wsr[i]) == pageId) {
 					buffer_instance->buffer_hit += 1;
 					return i;
@@ -72,21 +70,21 @@ int WorkloadExecutor::search(Buffer* buffer_instance, int pageId, int algorithm)
 			}
 			break;
 		}
-		// FIFO
+		//  FIFO
 		case 3: {
 
 		}
     }
 
-    //did not find the page, miss
+    // did not find the page, miss
     buffer_instance->buffer_miss += 1;
     return -1;
 }
 
 
-//allocate empty frame and read the page into that frame
+// allocate empty frame and read the page into that frame
 int WorkloadExecutor::read(Buffer* buffer_instance, int pageId, int algorithm) {
-    //TODO
+    // TODO
     switch (algorithm) {
 		case 1: {
 			int cur_size = buffer_instance->bufferpool.size();
@@ -94,43 +92,43 @@ int WorkloadExecutor::read(Buffer* buffer_instance, int pageId, int algorithm) {
 			int pos = search(buffer_instance, pageId, algorithm);
 
 			if(pos != -1) {
-				//found, only need to update lru
+				// found, only need to update lru
 				deque<int>::iterator it = buffer_instance->candidate.begin();
 				while(*it != pageId) it++;
 				buffer_instance->candidate.erase(it);
 				buffer_instance->candidate.push_front(pageId);
 			}
-			//miss
+			// miss
 			else {
-				//cache is not full
+				// cache is not full
 				if(cur_size < capacity) {
-					//read the page from disk, mark the page clean
-					//TODO
+					// read the page from disk, mark the page clean
+					// TODO
 					buffer_instance->bufferpool.push_back(make_pair(pageId, false));
-					//add read_io
+					// add read_io
 					buffer_instance->read_io += 1;
 
 				}
-				//cache is full
+				// cache is full
 				else {
-					//find the position to evict
-					//cout << "enter LRU func!!!" << endl;
+					// find the position to evict
+					// cout << "enter LRU func!!!" << endl;
 					int pos = buffer_instance->LRU();
-					//if the page is dirty, write the page into the disk
+					// if the page is dirty, write the page into the disk
 					if(buffer_instance->bufferpool[pos].second == true) {
 						buffer_instance->write_io += 1;
 					}
-					//erase the target page
+					// erase the target page
 					buffer_instance->bufferpool[pos].first = -1;
 					buffer_instance->bufferpool[pos].second = false;
 
-					//put new page in the blank
+					// put new page in the blank
 					buffer_instance->bufferpool[pos].first = pageId;
-					//add read_io
+					// add read_io
 					buffer_instance->read_io += 1;
 
 				}
-				//update lru
+				// update lru
 				buffer_instance->candidate.push_front(pageId);
 			}
 			break;
@@ -141,48 +139,48 @@ int WorkloadExecutor::read(Buffer* buffer_instance, int pageId, int algorithm) {
 			int pos = search(buffer_instance, pageId, algorithm);
 
 			if(pos != -1) {
-				//found, only need to update lru
+				// found, only need to update lru
 				deque<int>::iterator it = buffer_instance->candidate.begin();
 				while(*it != pageId) it++;
 				buffer_instance->candidate.erase(it);
 				buffer_instance->candidate.push_front(pageId);
 			}
-			//miss
+			// miss
 			else {
-				//cache is not full
+				// cache is not full
 				if(cur_size < capacity) {
-					//read the page from disk, mark the page clean
+					// read the page from disk, mark the page clean
 					buffer_instance->bufferpool_wsr.push_back(make_tuple(pageId, false, false));
-					//add read_io
+					// add read_io
 					buffer_instance->read_io += 1;
 
 				}
-				//cache is full
+				// cache is full
 				else {
-					//find the position to evict
-					//cout << "enter LRU func!!!" << endl;
+					// find the position to evict
+					// cout << "enter LRU func!!!" << endl;
 					int pos = buffer_instance->LRUWSR();
-					//if the page is dirty, write the page into the disk
+					// if the page is dirty, write the page into the disk
 					if(get<1>(buffer_instance->bufferpool_wsr[pos]) == true) {
 						buffer_instance->write_io += 1;
 					}
-					//erase the target page
+					// erase the target page
 					get<0>(buffer_instance->bufferpool_wsr[pos]) = -1;
 					get<1>(buffer_instance->bufferpool_wsr[pos]) = false;
 
-					//put new page in the blank
+					// put new page in the blank
 					get<0>(buffer_instance->bufferpool_wsr[pos]) = pageId;
-					//add read_io
+					// add read_io
 					buffer_instance->read_io += 1;
 
 				}
-				//update lru
+				// update lru
 				buffer_instance->candidate.push_front(pageId);
 			}
 			break;
 		}
 		case 3: {
-			
+
 		}
     }
 
@@ -203,110 +201,110 @@ int WorkloadExecutor::write(Buffer* buffer_instance, int pageId, int algorithm) 
 			int cur_size = buffer_instance->bufferpool.size();
 			int capacity = buffer_instance->max_buffer_size;
 			int pos = search(buffer_instance, pageId, algorithm);
-			//if page is already in the bufferpool, update it
+			// if page is already in the bufferpool, update it
 			if(pos != -1) {
-				//found, update lru
+				// found, update lru
 				deque<int>::iterator it = buffer_instance->candidate.begin();
 				while(*it != pageId) it++;
 				buffer_instance->candidate.erase(it);
 				buffer_instance->candidate.push_front(pageId);
-				//marking the page as dirty bc it's been updated
-				//buffer_instance->bufferpool.push_back(make_pair(pageId, true));
-				//BUG FIXED
+				// marking the page as dirty bc it's been updated
+				// buffer_instance->bufferpool.push_back(make_pair(pageId, true));
+				// BUG FIXED
 				buffer_instance->bufferpool[pos].second = true;
 
 			}
-			//otherwise this is a miss
+			// otherwise this is a miss
 			else {
-				//if bufferpool isnt empty, simply add the page
+				// if bufferpool isnt empty, simply add the page
 				if(cur_size < capacity) {
-					//read the page from disk, mark the page dirty since we are updatin git
+					// read the page from disk, mark the page dirty since we are updatin git
 					buffer_instance->bufferpool.push_back(make_pair(pageId, true));
 					buffer_instance->read_io += 1;
 				}
-				//otherwise, the cache is full
+				// otherwise, the cache is full
 				else {
-					//find the position to evict
+					// find the position to evict
 					int pos = buffer_instance->LRU();
-					//if the page is dirty, write the page into the disk
+					// if the page is dirty, write the page into the disk
 					if(buffer_instance->bufferpool[pos].second == true) {
 						buffer_instance->write_io += 1;
 					}
-					//erase the target page
+					// erase the target page
 					buffer_instance->bufferpool[pos].first = -1;
 					buffer_instance->bufferpool[pos].second = false;
-					//add read_io
+					// add read_io
 					buffer_instance->read_io += 1;
-					//put new page in the blank, and then set that page to be dirty
+					// put new page in the blank, and then set that page to be dirty
 					buffer_instance->bufferpool[pos].first = pageId;
 					buffer_instance->bufferpool[pos].second = true;
 				}
-				//update lru
-				//BUG FIXED
+				// update lru
+				// BUG FIXED
 				buffer_instance->candidate.push_front(pageId);
-				//return -1;
+				// return -1;
 			}
 			break;
 		}
-		//LRU_WSR
+		// LRU_WSR
 		case 2: {
 			int cur_size = buffer_instance->bufferpool_wsr.size();
 			int capacity = buffer_instance->max_buffer_size;
 			int pos = search(buffer_instance, pageId, algorithm);
-			//if page is already in the bufferpool, update it
+			// if page is already in the bufferpool, update it
 			if(pos != -1) {
-				//found, update lru
+				// found, update lru
 				deque<int>::iterator it = buffer_instance->candidate.begin();
 				while(*it != pageId) it++;
 				buffer_instance->candidate.erase(it);
 				buffer_instance->candidate.push_front(pageId);
-				//marking the page as dirty bc it's been updated
-				//BUG FIXED
+				// marking the page as dirty bc it's been updated
+				// BUG FIXED
 				get<1>(buffer_instance->bufferpool_wsr[pos]) = true;
-				//make sure cold flag is cleared
+				// make sure cold flag is cleared
 				get<2>(buffer_instance->bufferpool_wsr[pos]) = false;
 			}
-			//otherwise this is a miss
+			// otherwise this is a miss
 			else {
-				//if bufferpool isnt empty, simply add the page
+				// if bufferpool isnt empty, simply add the page
 				if(cur_size < capacity) {
-					//read the page from disk, mark the page dirty since we are updatin git
+					// read the page from disk, mark the page dirty since we are updatin git
 					buffer_instance->bufferpool_wsr.push_back(make_tuple(pageId, true, false));
 					buffer_instance->read_io += 1;
 				}
-				//otherwise, the cache is full
+				// otherwise, the cache is full
 				else {
-					//find the position to evict
+					// find the position to evict
 					int pos = buffer_instance->LRUWSR();
-					//if the page is dirty, write the page into the disk
+					// if the page is dirty, write the page into the disk
 					if(get<1>(buffer_instance->bufferpool_wsr[pos]) == true) {
 						buffer_instance->write_io += 1;
 					}
-					//erase the target page in the bufferpool
+					// erase the target page in the bufferpool
 					get<0>(buffer_instance->bufferpool_wsr[pos]) = -1;
-					//put new page in the blank, and then set that page to be dirty
+					// put new page in the blank, and then set that page to be dirty
 					get<0>(buffer_instance->bufferpool_wsr[pos]) = pageId;
 					get<1>(buffer_instance->bufferpool_wsr[pos]) = true;
 					get<2>(buffer_instance->bufferpool_wsr[pos]) = false;
-					//add read_io
+					// add read_io
 					buffer_instance->read_io += 1;
-					//get<1>(buffer_instance->bufferpool_wsr[pos])                                                                                                                                                                                                                              = true;
+					// get<1>(buffer_instance->bufferpool_wsr[pos])                                                                                                                                                                                                                              = true;
 				}
-				//update lru
-				//BUG FIXED
+				// update lru
+				// BUG FIXED
 				buffer_instance->candidate.push_front(pageId);
-				//return -1;
+				// return -1;
 			}
 			break;
 		}
-		// FIFO
+		//  FIFO
 		case 3: {
 			int cur_size = buffer_instance->bufferpool_wsr.size();
 			int capacity = buffer_instance->max_buffer_size;
 			int pos = search(buffer_instance, pageId, algorithm);
 		}
     }
-    // Implement Write in the Bufferpool
+    //  Implement Write in the Bufferpool
 
     std::cout << "WRITE LRU List ";
     for (deque<int>::iterator it = buffer_instance->candidate.begin();
@@ -316,27 +314,27 @@ it != buffer_instance->candidate.end(); ++it) {
     std::cout << endl;
     return -1;
 }
-//is not applicable in this program setting, ignore
-//int WorkloadExecutor::unpin(Buffer* buffer_instance, int pageId)
-//{
-// This is optional
-//return -1;
-//}
+// is not applicable in this program setting, ignore
+// int WorkloadExecutor::unpin(Buffer* buffer_instance, int pageId)
+// {
+//  This is optional
+// return -1;
+// }
 
-//return the evict position in bufferpool
+// return the evict position in bufferpool
 int Buffer::LRU() {
-    //get the least used page id
+    // get the least used page id
     int index = -1;
-    //cout << candidate.size() << endl;
+    // cout << candidate.size() << endl;
     if(candidate.size() > 0) {
         int pageId = candidate.back();
-        //delete it from the LRU list
+        // delete it from the LRU list
         candidate.pop_back();
-        // the below fails b/c it tries do bool == int in the include due to pair
-        //vector< pair<int, bool> >::iterator i = find(bufferpool.begin(), bufferpool.end(), pageId);
-        //find it's position in the buffer pool
-        //int index = distance(bufferpool.begin(), i);
-        //return index;
+        //  the below fails b/c it tries do bool == int in the include due to pair
+        // vector< pair<int, bool> >::iterator i = find(bufferpool.begin(), bufferpool.end(), pageId);
+        // find it's position in the buffer pool
+        // int index = distance(bufferpool.begin(), i);
+        // return index;
         for(int i = 0; i < bufferpool.size(); i++) {
             if(pageId == bufferpool[i].first) {
                 index = i;
@@ -347,34 +345,34 @@ int Buffer::LRU() {
     cout << "currently using LRU" << endl;
     return index;
 }
-//return the evict position in bufferpool
-//second chance algo
+// return the evict position in bufferpool
+// second chance algo
 int Buffer::LRUWSR() {
     int index = -1;
-    //get the lru page id
+    // get the lru page id
     int victim = candidate.back();
-    //mapping the page id to actual page in the bufferpool
+    // mapping the page id to actual page in the bufferpool
     for(int i = 0; i < bufferpool_wsr.size(); i++) {
         if(victim == get<0>(bufferpool_wsr[i])) {
             index = i;
             break;
         }
     }
-    //while the victim is dirty
+    // while the victim is dirty
     while(get<1>(bufferpool_wsr[index])) {
-        //if the cold flag is set
+        // if the cold flag is set
         if(get<2>(bufferpool_wsr[index])) {
-            //exit the while loop
+            // exit the while loop
             break;
         } else {
-            //move victim to MRU position
+            // move victim to MRU position
             candidate.pop_back();
             candidate.push_front(victim);
-            //set its cold flag
+            // set its cold flag
             get<2>(bufferpool_wsr[index]) = true;
-            //replace victim with next LRU page
+            // replace victim with next LRU page
             victim = candidate.back();
-            //update index mapping
+            // update index mapping
             for(int i = 0; i < bufferpool_wsr.size(); i++) {
                 if(victim == get<0>(bufferpool_wsr[i])) {
                     index = i;
@@ -383,14 +381,14 @@ int Buffer::LRUWSR() {
             }
         }
     }
-    //remove victim from the LRU list
+    // remove victim from the LRU list
     candidate.pop_back();
     cout << "currently using LRU-WSR" << endl;
     return index;
 }
 
-// return the evict position in bufferpool
-// First-In-First-Out
+//  return the evict position in bufferpool
+//  First-In-First-Out
 int Buffer::FIFO() {
 	return 0;
 }
