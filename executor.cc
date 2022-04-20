@@ -280,7 +280,7 @@ int WorkloadExecutor::write(Buffer* buffer_instance, int pageId, int algorithm)
           buffer_instance->read_io += 1;
           //put new page in the blank, and then set that page to be dirty
           get<0>(buffer_instance->bufferpool_wsr[pos]) = pageId;
-          get<1>(buffer_instance->bufferpool_wsr[pos])                                                                                                                                                                                                                                 = true;
+          get<1>(buffer_instance->bufferpool_wsr[pos]) = true;                                                                                                                                                                                                                                 = true;
         }
         //update lru 
         //BUG FIXED
