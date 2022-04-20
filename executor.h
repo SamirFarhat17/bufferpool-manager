@@ -6,6 +6,8 @@
 #include <unordered_map>
 #include <list>
 #include <string>
+#include <time.h>
+#include <chrono>
 
 using namespace std;
 
@@ -38,6 +40,8 @@ class Buffer {
     static int buffer_miss;
     static int read_io;
     static int write_io;
+    static std::chrono::time_point<std::chrono::steady_clock> timing;
+
     int LRU();
     int LRUWSR();
     int FIFO();

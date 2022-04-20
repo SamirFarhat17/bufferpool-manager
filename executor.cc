@@ -8,6 +8,8 @@
 #include <iomanip>
 #include <fstream>
 #include <string>
+#include <time.h>
+#include <chrono>
 
 #include "parameter.h"
 #include "executor.h"
@@ -20,6 +22,8 @@ int Buffer::buffer_hit = 0;
 int Buffer::buffer_miss = 0;
 int Buffer::read_io = 0;
 int Buffer::write_io = 0;
+std::chrono::time_point<std::chrono::steady_clock> Buffer::timing = chrono::steady_clock::now();
+
 
 
 Buffer::Buffer(Simulation_Environment *_env) {
@@ -414,6 +418,7 @@ int Buffer::printBuffer() {
 }
 
 int Buffer::printStats() {
+	auto end = chrono::steady_clock::now();
     Simulation_Environment* _env = Simulation_Environment::getInstance();
     cout << "******************************************************" << endl;
     cout << "Printing Stats..." << endl;
@@ -422,7 +427,7 @@ int Buffer::printStats() {
     cout << "Buffer Miss: " << buffer_miss << endl;
     cout << "Read IO: " << read_io << endl;
     cout << "Write IO: " << write_io << endl;
-    cout << "Global Clock: " << endl;
+    cout << "Global Clock: " << chrono::duration <double, milli> (end - timing).count() << "ms" << endl; // need to add time functionality
     cout << "******************************************************" << endl;
     return 0;
 }
