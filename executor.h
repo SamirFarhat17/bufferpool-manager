@@ -5,6 +5,7 @@
 #include <vector>
 #include <unordered_map>
 #include <list>
+#include <string>
 
 using namespace std;
 
