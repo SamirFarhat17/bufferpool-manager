@@ -25,6 +25,8 @@ namespace bufmanager {
     
     //initizate bufferpool with <page size, dirty page bit>
     vector< pair<int, bool> > bufferpool;
+    //initizate bufferpool for LRU WSR with <page size, dirty page bit, cold flag>
+    vector< tuple<int, bool, bool> > bufferpool_wsr;
     //deck as the lru candidate list
     deque<int> candidate;
     static long max_buffer_size;  //in pages
@@ -36,7 +38,6 @@ namespace bufmanager {
     static int read_io;
     static int write_io;
     int LRU();
-    void update_lru(deque<int> candidate, int pageId, int pos, bool hit);
     int LRUWSR();
 
     static int printBuffer();
@@ -54,7 +55,7 @@ namespace bufmanager {
     public:
     static int read(Buffer* buffer_instance, int pageId, int algorithm);
     static int write(Buffer* buffer_instance, int pageId, int algorithm);
-    static int search(Buffer* buffer_instance, int pageId);
+    static int search(Buffer* buffer_instance, int pageId, int algorithm);
     static int unpin(Buffer* buffer_instance, int pageId);
   };
 }
