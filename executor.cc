@@ -7,6 +7,7 @@
 #include <algorithm>
 #include <iomanip>
 #include <fstream>
+#include <string>
 
 #include "parameter.h"
 #include "executor.h"
@@ -14,7 +15,7 @@
 using namespace bufmanager;
 
 Buffer *Buffer::buffer_instance;
-long Buffer::max_buffer_size = 15;
+long Buffer::max_buffer_size = 0;
 int Buffer::buffer_hit = 0;
 int Buffer::buffer_miss = 0;
 int Buffer::read_io = 0;
@@ -24,7 +25,7 @@ Buffer::Buffer(Simulation_Environment *_env)
 {
   //candidate is for LRU list 
   candidate.clear();
-
+  max_buffer_size = _env->buffer_size_in_pages;
 
   //initialize the cache
   // for(int i = 0; i < max_buffer_size; i++){
@@ -274,13 +275,13 @@ int WorkloadExecutor::write(Buffer* buffer_instance, int pageId, int algorithm)
           }
           //erase the target page in the bufferpool
           get<0>(buffer_instance->bufferpool_wsr[pos]) = -1;
-          get<1>(buffer_instance->bufferpool_wsr[pos]) = false;
+          //put new page in the blank, and then set that page to be dirty
+          get<0>(buffer_instance->bufferpool_wsr[pos]) = pageId;
+          get<1>(buffer_instance->bufferpool_wsr[pos]) = true;
           get<2>(buffer_instance->bufferpool_wsr[pos]) = false;
           //add read_io
           buffer_instance->read_io += 1;
-          //put new page in the blank, and then set that page to be dirty
-          get<0>(buffer_instance->bufferpool_wsr[pos]) = pageId;
-          get<1>(buffer_instance->bufferpool_wsr[pos]) = true;                                                                                                                                                                                                                                 = true;
+          //get<1>(buffer_instance->bufferpool_wsr[pos])                                                                                                                                                                                                                              = true;
         }
         //update lru 
         //BUG FIXED
@@ -374,10 +375,19 @@ int Buffer::LRUWSR()
 int Buffer::printBuffer()
 {
   int counter = 0;
-  for(std::pair<int, bool> page : buffer_instance->bufferpool) {
-    std::cout << "Page: " << counter << " Data: " << page.first << " Dirty-Bit: " << page.second << endl;
-    counter++;
+  if(buffer_instance->bufferpool_wsr.empty()){
+    for(std::pair<int, bool> page : buffer_instance->bufferpool) {
+      std::cout << "Page: " << counter << " PageID: " << page.first << " Dirty-Bit: " << page.second << endl;
+      counter++;
+    }
   }
+  else {
+    for(std::tuple<int, bool, bool> page : buffer_instance->bufferpool_wsr) {
+      std::cout << "Page: " << counter << " PageId: " << get<0>(page) << " Dirty-Bit: " << get<1>(page) << " Cold Flag: " << get<2>(page) << endl;
+      counter++;
+    }
+  }
+  
   return 0;
 }
 
