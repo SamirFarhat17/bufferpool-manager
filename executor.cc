@@ -34,9 +34,9 @@ chrono::duration <double, milli> Buffer::timing;
 
 
 Buffer::Buffer(Simulation_Environment *_env) {
-    // candidate is for LRU list
+    // lru_candidate is for LRU list
 	//chrono::duration <double, milli> (chrono::steady_clock::now() - chrono::steady_clock::now());
-    candidate.clear();
+    lru_candidate.clear();
     max_buffer_size = _env->buffer_size_in_pages;
 
 	// initialize the cache
@@ -116,10 +116,10 @@ int WorkloadExecutor::read(Buffer* buffer_instance, int pageId, int algorithm) {
 
 			if(pos != -1) {
 				// found, only need to update lru
-				deque<int>::iterator it = buffer_instance->candidate.begin();
+				deque<int>::iterator it = buffer_instance->lru_candidate.begin();
 				while(*it != pageId) it++;
-				buffer_instance->candidate.erase(it);
-				buffer_instance->candidate.push_front(pageId);
+				buffer_instance->lru_candidate.erase(it);
+				buffer_instance->lru_candidate.push_front(pageId);
 			}
 			// miss
 			else {
@@ -154,7 +154,7 @@ int WorkloadExecutor::read(Buffer* buffer_instance, int pageId, int algorithm) {
 
 				}
 				// update lru
-				buffer_instance->candidate.push_front(pageId);
+				buffer_instance->lru_candidate.push_front(pageId);
 			}
 			break;
 		}
@@ -165,10 +165,10 @@ int WorkloadExecutor::read(Buffer* buffer_instance, int pageId, int algorithm) {
 
 			if(pos != -1) {
 				// found, only need to update lru
-				deque<int>::iterator it = buffer_instance->candidate.begin();
+				deque<int>::iterator it = buffer_instance->lru_candidate.begin();
 				while(*it != pageId) it++;
-				buffer_instance->candidate.erase(it);
-				buffer_instance->candidate.push_front(pageId);
+				buffer_instance->lru_candidate.erase(it);
+				buffer_instance->lru_candidate.push_front(pageId);
 			}
 			// miss
 			else {
@@ -202,7 +202,7 @@ int WorkloadExecutor::read(Buffer* buffer_instance, int pageId, int algorithm) {
 
 				}
 				// update lru
-				buffer_instance->candidate.push_front(pageId);
+				buffer_instance->lru_candidate.push_front(pageId);
 			}
 			break;
 		}
@@ -221,14 +221,14 @@ int WorkloadExecutor::read(Buffer* buffer_instance, int pageId, int algorithm) {
 				// not full, no need to evict
 				if(cur_size < capacity) {
 					buffer_instance->bufferpool.push_back(make_pair(pageId, false));
-					buffer_instance->fifo_candidates.push(pageId);
+					buffer_instance->fifo_candidates.push_back(pageId);
 				}
 				// full, perform eviction
 				else {
 					// get position to replace (pops in FIFO function)
 					int replacement_pos = buffer_instance->FIFO();
 					// add incoming page to FIFO queue
-					buffer_instance->fifo_candidates.push(pageId);
+					buffer_instance->fifo_candidates.push_back(pageId);
 					// if the page is dirty, write the page into the disk
 					if(buffer_instance->bufferpool[replacement_pos].second == true) {
 						buffer_instance->write_io += 1;
@@ -251,8 +251,8 @@ int WorkloadExecutor::read(Buffer* buffer_instance, int pageId, int algorithm) {
 
 
     std::cout << "READ LRU List ";
-    for (deque<int>::iterator it = buffer_instance->candidate.begin();
-            it != buffer_instance->candidate.end(); ++it) {
+    for (deque<int>::iterator it = buffer_instance->lru_candidate.begin();
+            it != buffer_instance->lru_candidate.end(); ++it) {
         std::cout << ' ' << *it;
     }
     std::cout << endl;
@@ -269,10 +269,10 @@ int WorkloadExecutor::write(Buffer* buffer_instance, int pageId, int algorithm) 
 			// if page is already in the bufferpool, update it
 			if(pos != -1) {
 				// found, update lru
-				deque<int>::iterator it = buffer_instance->candidate.begin();
+				deque<int>::iterator it = buffer_instance->lru_candidate.begin();
 				while(*it != pageId) it++;
-				buffer_instance->candidate.erase(it);
-				buffer_instance->candidate.push_front(pageId);
+				buffer_instance->lru_candidate.erase(it);
+				buffer_instance->lru_candidate.push_front(pageId);
 				// marking the page as dirty bc it's been updated
 				// buffer_instance->bufferpool.push_back(make_pair(pageId, true));
 				// BUG FIXED
@@ -306,7 +306,7 @@ int WorkloadExecutor::write(Buffer* buffer_instance, int pageId, int algorithm) 
 				}
 				// update lru
 				// BUG FIXED
-				buffer_instance->candidate.push_front(pageId);
+				buffer_instance->lru_candidate.push_front(pageId);
 				// return -1;
 			}
 			break;
@@ -319,10 +319,10 @@ int WorkloadExecutor::write(Buffer* buffer_instance, int pageId, int algorithm) 
 			// if page is already in the bufferpool, update it
 			if(pos != -1) {
 				// found, update lru
-				deque<int>::iterator it = buffer_instance->candidate.begin();
+				deque<int>::iterator it = buffer_instance->lru_candidate.begin();
 				while(*it != pageId) it++;
-				buffer_instance->candidate.erase(it);
-				buffer_instance->candidate.push_front(pageId);
+				buffer_instance->lru_candidate.erase(it);
+				buffer_instance->lru_candidate.push_front(pageId);
 				// marking the page as dirty bc it's been updated
 				// BUG FIXED
 				get<1>(buffer_instance->bufferpool_wsr[pos]) = true;
@@ -357,7 +357,7 @@ int WorkloadExecutor::write(Buffer* buffer_instance, int pageId, int algorithm) 
 				}
 				// update lru
 				// BUG FIXED
-				buffer_instance->candidate.push_front(pageId);
+				buffer_instance->lru_candidate.push_front(pageId);
 				// return -1;
 			}
 			break;
@@ -381,8 +381,8 @@ int WorkloadExecutor::write(Buffer* buffer_instance, int pageId, int algorithm) 
     //  Implement Write in the Bufferpool
 
     std::cout << "WRITE LRU List ";
-    for (deque<int>::iterator it = buffer_instance->candidate.begin();
-		it != buffer_instance->candidate.end(); ++it) {
+    for (deque<int>::iterator it = buffer_instance->lru_candidate.begin();
+		it != buffer_instance->lru_candidate.end(); ++it) {
         std::cout << ' ' << *it;
     }
     std::cout << endl;
@@ -429,11 +429,11 @@ return -1;
 int Buffer::LRU() {
     // get the least used page id
     int index = -1;
-    // cout << candidate.size() << endl;
-    if(candidate.size() > 0) {
-        int pageId = candidate.back();
+    // cout << lru_candidate.size() << endl;
+    if(lru_candidate.size() > 0) {
+        int pageId = lru_candidate.back();
         // delete it from the LRU list
-        candidate.pop_back();
+        lru_candidate.pop_back();
         /*
 		the below fails b/c it tries do bool == int in the include due to pair
         vector< pair<int, bool> >::iterator i = find(bufferpool.begin(), bufferpool.end(), pageId);
@@ -458,7 +458,7 @@ int Buffer::LRU() {
 int Buffer::LRUWSR() {
     int index = -1;
     // get the lru page id
-    int victim = candidate.back();
+    int victim = lru_candidate.back();
     // mapping the page id to actual page in the bufferpool
     for(int i = 0; i < bufferpool_wsr.size(); i++) {
         if(victim == get<0>(bufferpool_wsr[i])) {
@@ -474,12 +474,12 @@ int Buffer::LRUWSR() {
             break;
         } else {
             // move victim to MRU position
-            candidate.pop_back();
-            candidate.push_front(victim);
+            lru_candidate.pop_back();
+            lru_candidate.push_front(victim);
             // set its cold flag
             get<2>(bufferpool_wsr[index]) = true;
             // replace victim with next LRU page
-            victim = candidate.back();
+            victim = lru_candidate.back();
             // update index mapping
             for(int i = 0; i < bufferpool_wsr.size(); i++) {
                 if(victim == get<0>(bufferpool_wsr[i])) {
@@ -490,7 +490,7 @@ int Buffer::LRUWSR() {
         }
     }
     // remove victim from the LRU list
-    candidate.pop_back();
+    lru_candidate.pop_back();
     cout << "currently using LRU-WSR" << endl;
     return index;
 }
@@ -502,7 +502,7 @@ int Buffer::FIFO() {
 	int index = -1;
 	// get page ID to be replaced
 	int pageToReplace = fifo_candidates.front();
-	fifo_candidates.pop();
+	fifo_candidates.pop_front();
 	// parse bufferpool to find it
 	for(int i = 0; i < bufferpool.size(); i++) {
 		if(pageToReplace == bufferpool[i].first) {

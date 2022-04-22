@@ -30,9 +30,9 @@ class Buffer {
 		//initizate bufferpool for LRU WSR with <page size, dirty page bit, cold flag>
 		vector< tuple<int, bool, bool> > bufferpool_wsr;
 		// initialize bufferpool with a queue for FIFO
-		queue<int> fifo_candidates;
+		deque<int> fifo_candidates;
 		//deck as the lru candidate list
-		deque<int> candidate;
+		deque<int> lru_candidate;
 
 		static long max_buffer_size;  //in pages
 		static Buffer* getBufferInstance(Simulation_Environment* _env);
