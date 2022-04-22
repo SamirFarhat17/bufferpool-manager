@@ -5,6 +5,7 @@
 #include <vector>
 #include <unordered_map>
 #include <list>
+#include <queue>
 #include <string>
 #include <time.h>
 #include <chrono>
@@ -14,45 +15,47 @@ using namespace std;
 namespace bufmanager {
 
 class Buffer {
-    // This class maintains specific property of the buffer.
-    // You definitely need to modify this part
-    // You need to add more variables here for your implementation. For example, currently the bufferpool itself is missing
+	// This class maintains specific property of the buffer.
+	// You definitely need to modify this part
+	// You need to add more variables here for your implementation.
+	// For example, currently the bufferpool itself is missing
 
-  private:
-    Buffer(Simulation_Environment* _env);
+	private:
+		Buffer(Simulation_Environment* _env);
+		static Buffer* buffer_instance;
 
-    static Buffer* buffer_instance;
+	public:
+		//initizate bufferpool with <page size, dirty page bit>
+		vector< pair<int, bool> > bufferpool;
+		//initizate bufferpool for LRU WSR with <page size, dirty page bit, cold flag>
+		vector< tuple<int, bool, bool> > bufferpool_wsr;
+		// initialize bufferpool with a queue for FIFO
+		queue<int> fifo_candidates;
+		//deck as the lru candidate list
+		deque<int> candidate;
+
+		static long max_buffer_size;  //in pages
+		static Buffer* getBufferInstance(Simulation_Environment* _env);
+
+		// counters/statistics parameters
+		static int buffer_hit;
+		static int buffer_miss;
+		static int read_io;
+		static int write_io;
+		static std::chrono::duration <double, milli> timing;
+
+		int LRU();
+		int LRUWSR();
+		int FIFO();
 
 
-  public:
-
-    //initizate bufferpool with <page size, dirty page bit>
-    vector< pair<int, bool> > bufferpool;
-    //initizate bufferpool for LRU WSR with <page size, dirty page bit, cold flag>
-    vector< tuple<int, bool, bool> > bufferpool_wsr;
-    //deck as the lru candidate list
-    deque<int> candidate;
-    static long max_buffer_size;  //in pages
-
-    static Buffer* getBufferInstance(Simulation_Environment* _env);
-
-    static int buffer_hit;
-    static int buffer_miss;
-    static int read_io;
-    static int write_io;
-    static std::chrono::time_point<std::chrono::steady_clock> timing;
-
-    int LRU();
-    int LRUWSR();
-    int FIFO();
-
-    static int printBuffer();
-    static int printStats();
+		static int printBuffer();
+		static int printStats();
 };
 
 class Disk {
-  private:
-  public:
+    private:
+    public:
 };
 
 
@@ -62,6 +65,7 @@ class WorkloadExecutor {
     static int read(Buffer* buffer_instance, int pageId, int algorithm);
     static int write(Buffer* buffer_instance, int pageId, int algorithm);
     static int search(Buffer* buffer_instance, int pageId, int algorithm);
+	static void diskOp(Buffer* buffer_instance, int operation, int pageID, vector<vector<int>> sectorsPages);
     static int unpin(Buffer* buffer_instance, int pageId);
 };
 }
