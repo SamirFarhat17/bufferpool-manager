@@ -5,6 +5,7 @@
 #include <vector>
 #include <unordered_map>
 #include <list>
+#include <queue>
 #include <string>
 #include <time.h>
 #include <chrono>
@@ -31,10 +32,9 @@ class Buffer {
     //initizate bufferpool for LRU WSR with <page size, dirty page bit, cold flag>
     vector< tuple<int, bool, bool> > bufferpool_wsr;
     //deck as the lru candidate list
-    deque<int> candidate;
+    deque<int> lru_candidate;
     //for cflru: going to store either pageid of clean or -1
-    deque<int> cflru;
-    //vector for the cflru policy, so you 
+    deque<int> fifo_candidates;
     static long max_buffer_size;  //in pages
 
     static Buffer* getBufferInstance(Simulation_Environment* _env);
@@ -55,8 +55,8 @@ class Buffer {
 };
 
 class Disk {
-  private:
-  public:
+    private:
+    public:
 };
 
 
@@ -66,6 +66,7 @@ class WorkloadExecutor {
     static int read(Buffer* buffer_instance, int pageId, int algorithm);
     static int write(Buffer* buffer_instance, int pageId, int algorithm);
     static int search(Buffer* buffer_instance, int pageId, int algorithm);
+	static void diskOp(Buffer* buffer_instance, int operation, int pageID, vector<vector<int>> sectorsPages);
     static int unpin(Buffer* buffer_instance, int pageId);
 };
 }

@@ -56,13 +56,13 @@ int runWorkload(Simulation_Environment* _env) {
     bufmanager::WorkloadExecutor workload_executer;
     ifstream workload_file;
     workload_file.open("workload.txt");
-
+    
+    std::chrono::time_point<std::chrono::steady_clock> start = chrono::steady_clock::now();
     assert(workload_file);
 
     while(!workload_file.eof()) {
         char instruction;
         int pageId;
-
         workload_file >> instruction >> pageId;
         switch (instruction) {
         case 'R':
@@ -73,8 +73,12 @@ int runWorkload(Simulation_Environment* _env) {
             workload_executer.write(buffer_instance, pageId, _env->algorithm);
             break;
         }
+        
         instruction = '\0';
     }
+    
+    std::chrono::time_point<std::chrono::steady_clock> end = chrono::steady_clock::now();
+    buffer_instance->timing = chrono::duration <double, milli> (end - start);
     return 1;
 }
 
