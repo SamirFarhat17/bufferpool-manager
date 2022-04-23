@@ -217,11 +217,11 @@ int WorkloadExecutor::read(Buffer* buffer_instance, int pageId, int algorithm) {
 			}
 			// otherwise this is a miss 
 			else {
-
 				// not full, no need to evict
 				if(cur_size < capacity) {
 					buffer_instance->bufferpool.push_back(make_pair(pageId, false));
 					buffer_instance->fifo_candidates.push_back(pageId);
+					buffer_instance->read_io += 1;
 				}
 				// full, perform eviction
 				else {
@@ -249,14 +249,21 @@ int WorkloadExecutor::read(Buffer* buffer_instance, int pageId, int algorithm) {
 		}
     }
 
-
+	/*
     std::cout << "READ LRU List ";
     for (deque<int>::iterator it = buffer_instance->lru_candidate.begin();
             it != buffer_instance->lru_candidate.end(); ++it) {
         std::cout << ' ' << *it;
     }
     std::cout << endl;
-    return -1;
+	*/
+	std::cout << "Read FIFO List " << pageId << " ";
+    for (deque<int>::iterator it = buffer_instance->fifo_candidates.begin();
+		it != buffer_instance->fifo_candidates.end(); ++it) {
+        std::cout << ' ' << *it;
+    }
+    std::cout << endl;
+	return -1;
 }
 
 
@@ -364,25 +371,55 @@ int WorkloadExecutor::write(Buffer* buffer_instance, int pageId, int algorithm) 
 		}
 		//  FIFO
 		case 3: {
-			int cur_size = buffer_instance->bufferpool_wsr.size();
+			int cur_size = buffer_instance->bufferpool.size();
 			int capacity = buffer_instance->max_buffer_size;
 			int pos = search(buffer_instance, pageId, algorithm);
 			// if page is already in the bufferpool, update it
 			if(pos != -1) {
-				
+				// found, mark dirty
+				buffer_instance->bufferpool[pos].second = true;
 			}
 			// otherwise this is a miss
 			else {
-				
+				if(cur_size < capacity) {
+					buffer_instance->bufferpool.push_back(make_pair(pageId, true));
+					buffer_instance->fifo_candidates.push_back(pageId);
+					buffer_instance->read_io += 1;
+					std::cout << "here" << pageId << " ";
+					// add disk read
+				}
+				// full, time to replace
+				else {
+					// get position to replace (pops in FIFO function)
+					int replacement_pos =  buffer_instance->FIFO();
+					buffer_instance->fifo_candidates.push_back(pageId);
+					// if the page is dirty, write the page into the disk
+					if(buffer_instance->bufferpool[replacement_pos].second == true) {
+						buffer_instance->write_io += 1;
+						// add disk write functionality
+					}
+					// erase the target page put new page in the blank
+					buffer_instance->bufferpool[replacement_pos].second = true;
+					buffer_instance->bufferpool[replacement_pos].first = pageId;
+					// add read_io
+					buffer_instance->read_io += 1;
+				}
 			}
 			break;
 		}
     }
     //  Implement Write in the Bufferpool
-
+	/*
     std::cout << "WRITE LRU List ";
     for (deque<int>::iterator it = buffer_instance->lru_candidate.begin();
 		it != buffer_instance->lru_candidate.end(); ++it) {
+        std::cout << ' ' << *it;
+    }
+    std::cout << endl;
+	*/
+	std::cout << "WRITE FIFO List " << pageId << " ";
+    for (deque<int>::iterator it = buffer_instance->fifo_candidates.begin();
+		it != buffer_instance->fifo_candidates.end(); ++it) {
         std::cout << ' ' << *it;
     }
     std::cout << endl;
@@ -448,7 +485,7 @@ int Buffer::LRU() {
             }
         }
     }
-    cout << "currently using LRU" << endl;
+    std::cout << "currently using LRU" << endl;
     return index;
 }
 
@@ -491,7 +528,7 @@ int Buffer::LRUWSR() {
     }
     // remove victim from the LRU list
     lru_candidate.pop_back();
-    cout << "currently using LRU-WSR" << endl;
+    std::cout << "currently using LRU-WSR" << endl;
     return index;
 }
 
@@ -537,14 +574,14 @@ int Buffer::printBuffer() {
 int Buffer::printStats() {
 	auto end = chrono::steady_clock::now();
     Simulation_Environment* _env = Simulation_Environment::getInstance();
-    cout << "******************************************************" << endl;
-    cout << "Printing Stats..." << endl;
-    cout << "Number of operations: " << _env->num_operations << endl;
-    cout << "Buffer Hit: " << buffer_hit << endl;
-    cout << "Buffer Miss: " << buffer_miss << endl;
-    cout << "Read IO: " << read_io << endl;
-    cout << "Write IO: " << write_io << endl;
-    cout << "Global Clock: " << Buffer::timing.count() << "ms" << endl; 
-    cout << "******************************************************" << endl;
+    std::cout << "******************************************************" << endl;
+    std::cout << "Printing Stats..." << endl;
+    std::cout << "Number of operations: " << _env->num_operations << endl;
+    std::cout << "Buffer Hit: " << buffer_hit << endl;
+    std::cout << "Buffer Miss: " << buffer_miss << endl;
+    std::cout << "Read IO: " << read_io << endl;
+    std::cout << "Write IO: " << write_io << endl;
+    std::cout << "Global Clock: " << Buffer::timing.count() << "ms" << endl; 
+    std::cout << "******************************************************" << endl;
     return 0;
 }
