@@ -32,6 +32,9 @@ class Buffer {
     vector< tuple<int, bool, bool> > bufferpool_wsr;
     //deck as the lru candidate list
     deque<int> candidate;
+    //for cflru: going to store either pageid of clean or -1
+    deque<int> cflru;
+    //vector for the cflru policy, so you 
     static long max_buffer_size;  //in pages
 
     static Buffer* getBufferInstance(Simulation_Environment* _env);
@@ -45,6 +48,7 @@ class Buffer {
     int LRU();
     int LRUWSR();
     int FIFO();
+    int CFLRU();
 
     static int printBuffer();
     static int printStats();

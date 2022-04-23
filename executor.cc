@@ -78,6 +78,23 @@ int WorkloadExecutor::search(Buffer* buffer_instance, int pageId, int algorithm)
 		case 3: {
 
 		}
+
+		//4 -> CFLRU
+		case 4: {
+			// the bufferpool still empty
+			if(buffer_instance->bufferpool.size() == 0) {
+				return -1;
+			}
+			//search through both the working part and clean-first part for a hit, just in case
+			for(int i = 0; i < buffer_instance->max_buffer_size; i++) {
+				// find the page in the bufferpool, hit
+				if(buffer_instance->bufferpool[i].first == pageId) {
+					buffer_instance->buffer_hit += 1;
+					return i;
+				}
+			}
+			break;
+		}
     }
 
     // did not find the page, miss
@@ -185,6 +202,50 @@ int WorkloadExecutor::read(Buffer* buffer_instance, int pageId, int algorithm) {
 		}
 		case 3: {
 
+		}
+		case 4:{ //CFLRU
+			int cur_size = buffer_instance->bufferpool.size();
+			int capacity = buffer_instance->max_buffer_size;
+			int pos = search(buffer_instance, pageId, algorithm);
+			if(pos != -1) {
+				// found, only need to update bufferpool
+				deque<int>::iterator it = buffer_instance->candidate.begin();
+				while(*it != pageId) it++;
+				buffer_instance->candidate.erase(it);
+				//pushing it to the very front bc it will be in the working zone there
+				buffer_instance->candidate.push_front(pageId);
+			}
+			else{//bufferpool miss
+				if(cur_size < capacity) { //space in cache
+					// read the page from disk, mark the page clean
+					//add to the front so it is the first page in the working zone
+					buffer_instance->bufferpool.push_back(make_pair(pageId, false));
+					// add read_io
+					buffer_instance->read_io += 1;
+				}
+				else { //cache is full
+					// find the position to evict
+					int pos = buffer_instance->CFLRU();
+					// if the page is dirty, write the page into the disk
+					if(buffer_instance->bufferpool[pos].second == true) {
+						buffer_instance->write_io += 1;
+					}
+					// erase the target page
+					buffer_instance->bufferpool[pos].first = -1;
+					buffer_instance->bufferpool[pos].second = false;
+
+					// put new page in the blank
+					buffer_instance->bufferpool[pos].first = pageId;
+					// add read_io
+					buffer_instance->read_io += 1;
+
+				}
+				// update lru
+				buffer_instance->candidate.push_front(pageId);
+				
+			}
+
+			break;
 		}
     }
 
@@ -307,6 +368,53 @@ int WorkloadExecutor::write(Buffer* buffer_instance, int pageId, int algorithm) 
 			int capacity = buffer_instance->max_buffer_size;
 			int pos = search(buffer_instance, pageId, algorithm);
 		}
+		//CFLRU
+		case 4: {
+			//cflru write logic
+			int cur_size = buffer_instance->bufferpool.size();
+			int capacity = buffer_instance->max_buffer_size;
+			int pos = search(buffer_instance, pageId, algorithm);
+
+			if(pos != -1) {
+				// found, update bufferpool
+				deque<int>::iterator it = buffer_instance->candidate.begin();
+				while(*it != pageId) it++;
+				buffer_instance->candidate.erase(it);
+				//pushing page to front to be first element in working zone
+				buffer_instance->candidate.push_front(pageId);
+				// marking the page as dirty bc it's been updated
+				buffer_instance->bufferpool[pos].second = true;
+
+			}
+			else{ //page not in cache
+				// if bufferpool isnt empty, simply add the page
+				if(cur_size < capacity) {
+					// read the page from disk, mark the page dirty since we are updatin git
+					//adding to front to be first element in working zone
+					buffer_instance->bufferpool.push_back(make_pair(pageId, true));
+					buffer_instance->read_io += 1;
+				}
+				// otherwise, the cache is full
+				else {
+					// find the position to evict
+					int pos = buffer_instance->CFLRU();
+					// if the page is dirty, write the page into the disk
+					if(buffer_instance->bufferpool[pos].second == true) {
+						buffer_instance->write_io += 1;
+					}
+					// erase the target page
+					buffer_instance->bufferpool[pos].first = -1;
+					buffer_instance->bufferpool[pos].second = false;
+					// add read_io
+					buffer_instance->read_io += 1;
+					// put new page in the blank, and then set that page to be dirty
+					buffer_instance->bufferpool[pos].first = pageId;
+					buffer_instance->bufferpool[pos].second = true;
+				}
+				buffer_instance->candidate.push_front(pageId);
+			}
+			break;
+		}
     }
     //  Implement Write in the Bufferpool
 
@@ -349,6 +457,47 @@ int Buffer::LRU() {
     cout << "currently using LRU" << endl;
     return index;
 }
+
+//return the evict position in bufferpool for cflru algorithm 
+int Buffer::CFLRU(){
+	int cur_size = buffer_instance->bufferpool.size();
+	int window_size = ceil(cur_size/3); 
+			//the windowsize for the clean_first section is the ceilingcurrent amount of 
+			//items in buffer/3, so that it is flexible based on the current demands (never too big or 
+			//too small)
+
+	int index = -1;
+	int count = 0;
+	int pageId = -1;
+
+	//going to go through the candidates in reverse order in the given window looking for a clean page
+	for(auto i = cflru.rbegin(); count < window_size; i++){
+		if(i[0] != -1){
+			//this is the page to evict
+			pageId = i[0];
+			cflru.erase(cflru.begin() + (cflru.size() - count - 1)); //erase this element from the cflru
+			break;
+		}
+		count++;
+	}
+
+	if(pageId == -1){
+		//if there was not a clean page in the window, then you will just take the least accessed page
+		pageId = candidate.back();
+        // delete it from the LRU list
+        candidate.pop_back();
+	}
+
+	for(int i = 0; i < bufferpool.size(); i++) {
+            if(pageId == bufferpool[i].first) {
+                index = i;
+                break;
+            }
+        }
+
+	return index;
+}
+
 // return the evict position in bufferpool
 // second chance algo
 int Buffer::LRUWSR() {
