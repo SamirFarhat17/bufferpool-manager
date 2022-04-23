@@ -385,7 +385,6 @@ int WorkloadExecutor::write(Buffer* buffer_instance, int pageId, int algorithm) 
 					buffer_instance->bufferpool.push_back(make_pair(pageId, true));
 					buffer_instance->fifo_candidates.push_back(pageId);
 					buffer_instance->read_io += 1;
-					std::cout << "here" << pageId << " ";
 					// add disk read
 				}
 				// full, time to replace
