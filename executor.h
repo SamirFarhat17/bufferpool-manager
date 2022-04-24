@@ -24,6 +24,7 @@ class Buffer {
 
     static Buffer* buffer_instance;
 
+		static void writeResults();
 
   public:
 

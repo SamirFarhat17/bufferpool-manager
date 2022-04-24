@@ -31,6 +31,7 @@ int Buffer::buffer_miss = 0;
 int Buffer::read_io = 0;
 int Buffer::write_io = 0;
 chrono::duration <double, milli> Buffer::timing;
+const vector<string> algorithms{ "LRU", "LRUWSR", "FIFO", "CFLRU", "LFU"};
 
 
 Buffer::Buffer(Simulation_Environment *_env) {
@@ -730,4 +731,35 @@ int Buffer::printStats() {
     std::cout << "Global Clock: " << Buffer::timing.count() << "ms" << endl; 
     std::cout << "******************************************************" << endl;
     return 0;
+}
+
+void Buffer::writeResults() {
+	Simulation_Environment* _env = Simulation_Environment::getInstance();
+
+	string buffer_size_in_pages = std::to_string(_env->buffer_size_in_pages); // b
+    string disk_size_in_pages = std::to_string(_env->disk_size_in_pages); // n
+    string num_operations = std::to_string(_env->num_operations); // x
+    string perct_reads = std::to_string(_env->perct_reads); // e
+    string perct_writes = std::to_string(_env->perct_writes);
+    string skewed_perct = std::to_string(_env->skewed_perct); //s
+    string skewed_data_perct = std::to_string(_env->skewed_data_perct); // d
+    string pin_mode = std::to_string(_env->pin_mode); // p
+    string verbosity = std::to_string(_env->verbosity); // v
+    int algo = _env->algorithm; // a
+
+	string u = "_";
+	string filename = "b-" + buffer_size_in_pages + u + "n-" + disk_size_in_pages + u + "x-" 
+		+ num_operations + u + "e-" + perct_reads + perct_writes + u + "s-" + skewed_perct
+		+ "d-" + skewed_data_perct + u + "v-" + verbosity + u + "a-" + algorithms.at(algo);
+
+	ofstream statFile;
+	statFile.open("workload_suite/runs/" + filename + ".txt");
+	statFile << buffer_hit << endl;
+    statFile << buffer_miss << endl;
+    statFile << read_io << endl;
+    statFile << write_io << endl;
+    statFile << Buffer::timing.count(); 
+	statFile.close();
+
+	return;
 }

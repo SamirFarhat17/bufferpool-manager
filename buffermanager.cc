@@ -44,6 +44,7 @@ int main(int argc, char *argvx[]) {
     Buffer::printBuffer();
     // Print Different Statistics
     Buffer::printStats();
+    Buffer::writeResults();
     return 0;
 }
 
