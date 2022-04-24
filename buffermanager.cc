@@ -42,9 +42,9 @@ int main(int argc, char *argvx[]) {
         int s = runWorkload(_env);
     }
     Buffer::printBuffer();
+    Buffer::writeResults();
     // Print Different Statistics
     Buffer::printStats();
-    Buffer::writeResults();
     return 0;
 }
 
