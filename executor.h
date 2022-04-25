@@ -48,6 +48,7 @@ class Buffer {
     int FIFO();
     int CFLRU();
 
+    std::ofstream disk;
     static void writeResults();
 
     static int printBuffer();
@@ -67,6 +68,7 @@ class WorkloadExecutor {
     static int write(Buffer* buffer_instance, int pageId, int algorithm);
     static int search(Buffer* buffer_instance, int pageId, int algorithm);
 	  static void diskOp(Buffer* buffer_instance, int operation, int pageID, vector<vector<int>> sectorsPages);
+    static void writeDisk(Buffer* buffer_instance);
     static int unpin(Buffer* buffer_instance, int pageId);
   };
 }

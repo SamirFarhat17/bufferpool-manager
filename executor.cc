@@ -18,11 +18,12 @@
 #include "executor.h"
 
 using namespace bufmanager;
+// random byte generation for disk file
 using random_bytes_engine = std::independent_bits_engine<
     std::default_random_engine, CHAR_BIT, unsigned char>;
-
 random_bytes_engine rbe;
-std::vector<unsigned char> rand_data(1000);
+std::vector<unsigned char> rand_data(4096);
+std::random_device engine;
 
 Buffer *Buffer::buffer_instance;
 long Buffer::max_buffer_size = 0;
@@ -435,8 +436,6 @@ void WorkloadExecutor::diskOp(
 	vector<vector<int>> sectorsPages
 	) {
 	
-	// open file
-	
 	// read
 	if(operation == 0) {
 		buffer_instance->read_io += 1;
@@ -449,7 +448,22 @@ void WorkloadExecutor::diskOp(
 
 	}
 
-	// close file
+}
+
+void WorkloadExecutor::writeDisk(Buffer* buffer_instance) {
+	Simulation_Environment* _env = Simulation_Environment::getInstance();
+	int pageSize = 4096;
+	string str = "";
+	char c;
+	for(int i = 0; i < _env->disk_size_in_pages; i++) {
+		str = "";
+		for(int j = 0; j < pageSize-1; j++) {
+			c = 'a' + rand()%26;
+			str = str + c;
+		}
+		buffer_instance->disk << str << endl;
+	}
+	return;
 }
 
 
@@ -607,6 +621,7 @@ void Buffer::writeResults() {
 
 	ofstream statFile;
 	statFile.open("workload_suite/runs/" + filename + ".txt");
+	statFile << num_operations << endl;
 	statFile << buffer_hit << endl;
     statFile << buffer_miss << endl;
     statFile << read_io << endl;

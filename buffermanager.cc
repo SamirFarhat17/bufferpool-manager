@@ -19,7 +19,6 @@ int parse_arguments(int argc, char *argvx[], Simulation_Environment* _env);
 void printParameters(Simulation_Environment* _env);
 int runWorkload(Simulation_Environment* _env);
 
-
 int main(int argc, char *argvx[]) {
     Simulation_Environment* _env = Simulation_Environment::getInstance();
 
@@ -57,6 +56,8 @@ int runWorkload(Simulation_Environment* _env) {
     bufmanager::WorkloadExecutor workload_executer;
     ifstream workload_file;
     workload_file.open("workload.txt");
+    buffer_instance->disk.open("disk.txt");
+    workload_executer.writeDisk(buffer_instance);
     
     std::chrono::time_point<std::chrono::steady_clock> start = chrono::steady_clock::now();
     assert(workload_file);
@@ -77,7 +78,7 @@ int runWorkload(Simulation_Environment* _env) {
         
         instruction = '\0';
     }
-    
+    buffer_instance->disk.close();
     std::chrono::time_point<std::chrono::steady_clock> end = chrono::steady_clock::now();
     buffer_instance->timing = chrono::duration <double, milli> (end - start);
     return 1;
