@@ -471,7 +471,7 @@ void WorkloadExecutor::writeDisk(Buffer* buffer_instance) {
 		}
 		buffer_instance->disk << str << endl;
 	}
-	buffer_instance->disk.seekg(4096, std::ios::beg);
+	buffer_instance->disk.seekg(0, std::ios::beg);
 	for(int i = 0; i < buffer_instance->pageSize; i++) {
 		//cout << char(buffer_instance->disk.get());
 	}
@@ -481,8 +481,8 @@ void WorkloadExecutor::writeDisk(Buffer* buffer_instance) {
 		c = 'a';
 		str = str + c;
 	}
-	buffer_instance->disk.seekp(0, std::ios::beg);
-	for(int i = 0; i < buffer_instance->pageSize; i++) {
+	//buffer_instance->disk.seekp(0, std::ios::beg);
+	for(int i = 0; i < buffer_instance->pageSize-1; i++) {
 		buffer_instance->disk.put('a');
 	}
 	return;
