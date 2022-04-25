@@ -56,7 +56,7 @@ int runWorkload(Simulation_Environment* _env) {
     bufmanager::WorkloadExecutor workload_executer;
     ifstream workload_file;
     workload_file.open("workload.txt");
-    buffer_instance->disk.open("disk.txt");
+    buffer_instance->disk.open("disk.txt", ios::in | ios::out);
     workload_executer.writeDisk(buffer_instance);
     
     std::chrono::time_point<std::chrono::steady_clock> start = chrono::steady_clock::now();

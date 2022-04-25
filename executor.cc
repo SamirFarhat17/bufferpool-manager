@@ -444,7 +444,16 @@ void WorkloadExecutor::diskOp(
 	else if(operation == 1) {
 		buffer_instance->write_io += 1;
 		// generate arbitrary bytes
-		std::generate(begin(rand_data), end(rand_data), std::ref(rbe));
+		int pageSize = 4096;
+		string str = "";
+		char c;
+		srand(time(NULL));
+		str = "";
+
+		for(int j = 0; j < pageSize-1; j++) {
+			c = 'a' + rand()%26;
+			str = str + c;
+		}
 
 	}
 
@@ -455,6 +464,7 @@ void WorkloadExecutor::writeDisk(Buffer* buffer_instance) {
 	int pageSize = 4096;
 	string str = "";
 	char c;
+	srand(time(NULL));
 	for(int i = 0; i < _env->disk_size_in_pages; i++) {
 		str = "";
 		for(int j = 0; j < pageSize-1; j++) {

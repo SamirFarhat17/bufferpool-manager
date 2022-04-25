@@ -48,7 +48,7 @@ class Buffer {
     int FIFO();
     int CFLRU();
 
-    std::ofstream disk;
+    std::fstream disk;
     static void writeResults();
 
     static int printBuffer();
