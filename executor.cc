@@ -444,13 +444,12 @@ void WorkloadExecutor::diskOp(
 	else if(operation == 1) {
 		buffer_instance->write_io += 1;
 		// generate arbitrary bytes
-		int pageSize = 4096;
 		string str = "";
 		char c;
 		srand(time(NULL));
 		str = "";
 
-		for(int j = 0; j < pageSize-1; j++) {
+		for(int j = 0; j < buffer_instance->pageSize-1; j++) {
 			c = 'a' + rand()%26;
 			str = str + c;
 		}
@@ -461,17 +460,30 @@ void WorkloadExecutor::diskOp(
 
 void WorkloadExecutor::writeDisk(Buffer* buffer_instance) {
 	Simulation_Environment* _env = Simulation_Environment::getInstance();
-	int pageSize = 4096;
 	string str = "";
 	char c;
 	srand(time(NULL));
 	for(int i = 0; i < _env->disk_size_in_pages; i++) {
 		str = "";
-		for(int j = 0; j < pageSize-1; j++) {
+		for(int j = 0; j < buffer_instance->pageSize - 1; j++) {
 			c = 'a' + rand()%26;
 			str = str + c;
 		}
 		buffer_instance->disk << str << endl;
+	}
+	buffer_instance->disk.seekg(4096, std::ios::beg);
+	for(int i = 0; i < buffer_instance->pageSize; i++) {
+		//cout << char(buffer_instance->disk.get());
+	}
+	cout << endl;
+	str = "";
+	for(int j = 0; j < buffer_instance->pageSize - 1; j++) {
+		c = 'a';
+		str = str + c;
+	}
+	buffer_instance->disk.seekp(0, std::ios::beg);
+	for(int i = 0; i < buffer_instance->pageSize; i++) {
+		buffer_instance->disk.put('a');
 	}
 	return;
 }
