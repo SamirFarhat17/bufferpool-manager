@@ -11,6 +11,8 @@ Simulation_Environment::Simulation_Environment() {
     int buffer_size_in_pages = 100;
     int disk_size_in_pages = 10000;
 
+    int page_size = 4096;
+
     int num_operations = 10000;
     float perct_reads = 70;
     float perct_writes = 30;

@@ -102,6 +102,7 @@ int parse_arguments(int argc, char *argvx[], Simulation_Environment* _env) {
     args::ValueFlag<int> skewed_perct_cmd(group1, "s", "Skewed distribution of operation on data [s% r/w on d% data, def: 100]", {'s', "skewed_perct"});
     args::ValueFlag<int> skewed_data_perct_cmd(group1, "d", "Skewed distribution of operation on data [s% r/w on d% data, def: 100]", {'d', "skewed_data_perct"});
     args::ValueFlag<int> pin_mode_cmd(group1, "p", "Pin Enabled/Disabled [def:0]", {'p', "pin_mode"});
+    args::ValueFlag<int> page_size_cmd(group1, "k", "Page size [def:4096]", {'k', "page_size"});
 
     try {
         parser.ParseCLI(argc, argvx);
@@ -129,13 +130,14 @@ int parse_arguments(int argc, char *argvx[], Simulation_Environment* _env) {
     _env->skewed_perct = skewed_perct_cmd ? args::get(skewed_perct_cmd) : 100;
     _env->skewed_data_perct = skewed_data_perct_cmd ? args::get(skewed_data_perct_cmd) : 100;
     _env->pin_mode = pin_mode_cmd ? args::get(pin_mode_cmd) : 0;
+    _env->page_size = page_size_cmd ? args::get(page_size_cmd) : 4096;
 
     return 0;
 }
 
 void printParameters(Simulation_Environment* _env) {
     //if (_env->verbosity >= 1)
-    std::cout << "b\t n\t x\t e\t e'\t a\t s\t d\t p  \n";
+    std::cout << "b\t n\t x\t e\t e'\t a\t s\t d\t p\t k  \n";
     std::cout << _env->buffer_size_in_pages << "\t ";
     std::cout << _env->disk_size_in_pages << "\t ";
     std::cout << _env->num_operations << "\t ";
@@ -145,6 +147,7 @@ void printParameters(Simulation_Environment* _env) {
     std::cout << _env->skewed_perct << "\t ";
     std::cout << _env->skewed_data_perct << "\t ";
     std::cout << _env->pin_mode << "\t ";
+    std::cout << _env->page_size << "\t";
 
     std::cout << std::endl;
 }

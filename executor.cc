@@ -25,6 +25,7 @@ int Buffer::buffer_hit = 0;
 int Buffer::buffer_miss = 0;
 int Buffer::read_io = 0;
 int Buffer::write_io = 0;
+int Buffer::pageSize = 4096;
 char Buffer::disk_write_char = '0';
 chrono::duration <double, milli> Buffer::timing;
 const vector<string> algorithms{ "LRU", "LRUWSR", "FIFO", "CFLRU", "LFU"};
@@ -35,6 +36,7 @@ Buffer::Buffer(Simulation_Environment *_env) {
 	//chrono::duration <double, milli> (chrono::steady_clock::now() - chrono::steady_clock::now());
     lru_candidate.clear();
     max_buffer_size = _env->buffer_size_in_pages;
+	pageSize = _env->page_size;
 
 	// initialize the cache
 	// for(int i = 0; i < max_buffer_size; i++) bufferpool.push_back(make_pair(-1, false));
@@ -644,7 +646,7 @@ int Buffer::LRU() {
 
 //return the evict position in bufferpool for cflru algorithm 
 int Buffer::CFLRU(){
-	int cur_size = buffer_instance->bufferpool.size();
+	int cur_size = lru_candidate.size();
 	int window_size = ceil(cur_size/3); 
 			//the windowsize for the clean_first section is the ceilingcurrent amount of 
 			//items in buffer/3, so that it is flexible based on the current demands (never too big or 
@@ -791,12 +793,13 @@ void Buffer::writeResults() {
     string skewed_data_perct = std::to_string(_env->skewed_data_perct); // d
     string pin_mode = std::to_string(_env->pin_mode); // p
     string verbosity = std::to_string(_env->verbosity); // v
+	string page_size = std::to_string(_env->page_size); //k
     int algo = _env->algorithm; // a
 
 	string u = "_";
 	string filename = "b-" + buffer_size_in_pages + u + "n-" + disk_size_in_pages + u + "x-" 
 		+ num_operations + u + "e-" + perct_reads + perct_writes + u + "s-" + skewed_perct
-		+ "d-" + skewed_data_perct + u + "v-" + verbosity + u + "a-" + algorithms.at(algo);
+		+ "d-" + skewed_data_perct + u + "v-" + verbosity + u + "a-" + algorithms.at(algo) + "k-" + page_size;
 
 	ofstream statFile;
 	statFile.open("workload_suite/runs/" + filename + ".txt");

@@ -30,6 +30,8 @@ class Simulation_Environment {
     int verbosity;         // v
     int algorithm;         // a
 
+    int page_size;        //k
+
 };
 
 #endif /*PARAMETER_H_*/

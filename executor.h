@@ -50,7 +50,7 @@ class Buffer {
     int CFLRU();
 
     std::fstream disk;
-    static const int pageSize = 4096;
+    static int pageSize;
     static void writeResults();
 
     static int printBuffer();
