@@ -19,6 +19,7 @@
 
 using namespace bufmanager;
 
+// Parameter initialization
 Buffer *Buffer::buffer_instance;
 long Buffer::max_buffer_size = 0;
 int Buffer::buffer_hit = 0;
@@ -320,20 +321,6 @@ int WorkloadExecutor::read(Buffer* buffer_instance, int pageId, int algorithm) {
 		}
     }
 
-	/*
-    std::cout << "READ LRU List ";
-    for (deque<int>::iterator it = buffer_instance->lru_candidate.begin();
-            it != buffer_instance->lru_candidate.end(); ++it) {
-        std::cout << ' ' << *it;
-    }
-    std::cout << endl;
-	*/
-	std::cout << "Read FIFO List " << pageId << " ";
-    for (deque<int>::iterator it = buffer_instance->fifo_candidates.begin();
-		it != buffer_instance->fifo_candidates.end(); ++it) {
-        std::cout << ' ' << *it;
-    }
-    std::cout << endl;
 	return -1;
 }
 
@@ -537,23 +524,10 @@ int WorkloadExecutor::write(Buffer* buffer_instance, int pageId, int algorithm) 
 			break;
 		}
     }
-    //  Implement Write in the Bufferpool
-	/*
-    std::cout << "WRITE LRU List ";
-    for (deque<int>::iterator it = buffer_instance->lru_candidate.begin();
-		it != buffer_instance->lru_candidate.end(); ++it) {
-        std::cout << ' ' << *it;
-    }
-    std::cout << endl;
-	*/
-	std::cout << "WRITE FIFO List " << pageId << " ";
-    for (deque<int>::iterator it = buffer_instance->fifo_candidates.begin();
-		it != buffer_instance->fifo_candidates.end(); ++it) {
-        std::cout << ' ' << *it;
-    }
-    std::cout << endl;
+
     return -1;
 }
+
 
 // Need to calculate disk sector and page size to accomplish proper functionality
 // Perform disk read or write
@@ -562,7 +536,9 @@ void WorkloadExecutor::diskOp(Buffer* buffer_instance, int operation, int pageID
 	Simulation_Environment* _env = Simulation_Environment::getInstance();
 	// read
 	if(operation == 0) {
+		// add in memory variable to the stack 
 		string reader;
+		// Calculate pointer in the disk
 		buffer_instance->disk.seekg(buffer_instance->pageSize * pageID, std::ios::beg);
 
 		for(int i = 0; i < buffer_instance->pageSize; i++) {
@@ -576,12 +552,14 @@ void WorkloadExecutor::diskOp(Buffer* buffer_instance, int operation, int pageID
 		// increment to next ascii value
 		buffer_instance->disk_write_char = char((int(buffer_instance->disk_write_char) % 26)+int('a'));
 		char c = buffer_instance->disk_write_char;
-		cout << c << endl;
+		// Adjust pointer
 		buffer_instance->disk.seekg(buffer_instance->pageSize * pageID, std::ios::beg);
 
 		for(int j = 0; j < buffer_instance->pageSize - 1; j++) {
+			// write byte-by-byte
 			buffer_instance->disk.put(c);
 		}
+		// add endline as the last character in the page
 		buffer_instance->disk.put('\n');
 
 	}
@@ -589,6 +567,7 @@ void WorkloadExecutor::diskOp(Buffer* buffer_instance, int operation, int pageID
 	return;
 	
 }
+
 
 void WorkloadExecutor::writeDisk(Buffer* buffer_instance) {
 	Simulation_Environment* _env = Simulation_Environment::getInstance();
@@ -607,31 +586,15 @@ void WorkloadExecutor::writeDisk(Buffer* buffer_instance) {
 }
 
 
-/*
-// is not applicable in this program setting, ignore
-int WorkloadExecutor::unpin(Buffer* buffer_instance, int pageId)
-{
-This is optional
-return -1;
-}
-*/
-
 // return the evict position in bufferpool
 int Buffer::LRU() {
     // get the least used page id
     int index = -1;
-    // cout << lru_candidate.size() << endl;
     if(lru_candidate.size() > 0) {
         int pageId = lru_candidate.back();
         // delete it from the LRU list
         lru_candidate.pop_back();
-        /*
-		the below fails b/c it tries do bool == int in the include due to pair
-        vector< pair<int, bool> >::iterator i = find(bufferpool.begin(), bufferpool.end(), pageId);
-        find it's position in the buffer pool
-        int index = distance(bufferpool.begin(), i);
-        return index;
-		*/
+
         for(int i = 0; i < bufferpool.size(); i++) {
             if(pageId == bufferpool[i].first) {
                 index = i;
@@ -639,7 +602,6 @@ int Buffer::LRU() {
             }
         }
     }
-    std::cout << "currently using LRU" << endl;
     return index;
 }
 
@@ -648,10 +610,11 @@ int Buffer::LRU() {
 int Buffer::CFLRU(){
 	int cur_size = lru_candidate.size();
 	int window_size = ceil(cur_size/3); 
-			//the windowsize for the clean_first section is the ceilingcurrent amount of 
-			//items in buffer/3, so that it is flexible based on the current demands (never too big or 
-			//too small)
-
+	/*
+	the windowsize for the clean_first section is the ceilingcurrent amount of 
+	items in buffer/3, so that it is flexible based on the current demands 
+	(never too big or too small)
+	*/
 	int index = -1;
 	int count = 0;
 	int pageId = -1;
@@ -675,11 +638,11 @@ int Buffer::CFLRU(){
 	}
 
 	for(int i = 0; i < bufferpool.size(); i++) {
-            if(pageId == bufferpool[i].first) {
-                index = i;
-                break;
-            }
-        }
+		if(pageId == bufferpool[i].first) {
+			index = i;
+			break;
+		}
+	}
 
 	return index;
 }
@@ -797,10 +760,12 @@ void Buffer::writeResults() {
     int algo = _env->algorithm; // a
 
 	string u = "_";
+	// Make filename such that it can be parsed for stats of interest
 	string filename = "b-" + buffer_size_in_pages + u + "n-" + disk_size_in_pages + u + "x-" 
 		+ num_operations + u + "e-" + perct_reads + perct_writes + u + "s-" + skewed_perct
-		+ "d-" + skewed_data_perct + u + "v-" + verbosity + u + "a-" + algorithms.at(algo) + "k-" + page_size;
-
+		+ "d-" + skewed_data_perct + u + "v-" + verbosity + u + "a-" + algorithms.at(algo) 
+		+ "k-" + page_size;
+	// write the file with the run statistics
 	ofstream statFile;
 	statFile.open("workload_suite/runs/" + filename + ".txt");
 	statFile << num_operations << endl;
