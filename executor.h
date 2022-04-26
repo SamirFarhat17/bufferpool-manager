@@ -13,7 +13,6 @@
 using namespace std;
 
 namespace bufmanager {
-
 	class Buffer {
 		// This class maintains specific property of the buffer.
 		// You definitely need to modify this part
@@ -57,7 +56,7 @@ namespace bufmanager {
 			static void writeResults();
 			static int printBuffer();
 			static int printStats();
-		};
+	};
 
 	class WorkloadExecutor {
 		public:
@@ -68,5 +67,5 @@ namespace bufmanager {
 			static void diskOp(Buffer* buffer_instance, int operation, int pageID);
 			static void writeDisk(Buffer* buffer_instance);
 			static int unpin(Buffer* buffer_instance, int pageId);
-		};
+	};
 }

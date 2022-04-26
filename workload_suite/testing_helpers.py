@@ -1,18 +1,18 @@
-def build_command(b, n, x, e, s, d, a):
+def build_command(b, n, x, e, s, d, a, k):
     command = "./../buffermanager -b {} -n {} -x {} -e {} " \
-              "-s {} -d {} -a {} > {}".format(b, n, x, e, s, d, a, 
+              "-s {} -d {} -a {} -k {} > {}".format(b, n, x, e, s, d, a, 
 		      file_name(b, n, x, e, s, d, a, "txt"))
     return command
 
 
-def test_algo(b, n, x, e, s, d, algo):
+def test_algo(b, n, x, e, s, d, k, algo):
     command = "./../buffermanager -b {} -n {} -x {} -e {} " \
-              "-s {} -d {} -a {}".format(b, n, x, e, s, d, algo)
+              "-s {} -d {} -a {} -k {}".format(b, n, x, e, s, d, k, algo)
     return command
 
 
-def file_name(b, n, x, e, s, d, a, extension):
-    file_path = "raw_results/buffersize_{}_disksize_{}_numops_{}_" \
-               "rw_{}_skewedperct_{}_skeweddataperct{}_algorithm_{}" \
-               ".{}".format(b, n, x, e, s, d, a, extension)
+def file_name(b, n, x, e, s, d, a, k, extension):
+    file_path = "raw_results/buffersize{}_disksize{}_numops{}_" \
+               "rw{}_skewedperct{}_skeweddataperct{}_algorithm{}_pagesize{}" \
+               ".{}".format(b, n, x, e, s, d, a, k,  extension)
     return file_path

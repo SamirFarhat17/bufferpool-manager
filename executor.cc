@@ -25,7 +25,7 @@ int Buffer::buffer_hit = 0;
 int Buffer::buffer_miss = 0;
 int Buffer::read_io = 0;
 int Buffer::write_io = 0;
-int Buffer::pageSize = 4096;
+int Buffer::pageSize = 0;
 char Buffer::disk_write_char = '0';
 chrono::duration <double, milli> Buffer::timing;
 const vector<string> algorithms{ "LRU", "LRUWSR", "FIFO", "CFLRU", "LFU"};
