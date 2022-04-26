@@ -18,12 +18,6 @@
 #include "executor.h"
 
 using namespace bufmanager;
-// random byte generation for disk file
-using random_bytes_engine = std::independent_bits_engine<
-    std::default_random_engine, CHAR_BIT, unsigned char>;
-random_bytes_engine rbe;
-std::vector<unsigned char> rand_data(4096);
-std::random_device engine;
 
 Buffer *Buffer::buffer_instance;
 long Buffer::max_buffer_size = 0;
@@ -31,6 +25,7 @@ int Buffer::buffer_hit = 0;
 int Buffer::buffer_miss = 0;
 int Buffer::read_io = 0;
 int Buffer::write_io = 0;
+char Buffer::disk_write_char = '0';
 chrono::duration <double, milli> Buffer::timing;
 const vector<string> algorithms{ "LRU", "LRUWSR", "FIFO", "CFLRU", "LFU"};
 
@@ -149,6 +144,7 @@ int WorkloadExecutor::read(Buffer* buffer_instance, int pageId, int algorithm) {
 					// add read_io
 					// add disk read functionality
 					buffer_instance->read_io += 1;
+					diskOp(buffer_instance, 0, pageId);
 
 				}
 				// cache is full
@@ -159,6 +155,7 @@ int WorkloadExecutor::read(Buffer* buffer_instance, int pageId, int algorithm) {
 					// if the page is dirty, write the page into the disk
 					if(buffer_instance->bufferpool[pos].second == true) {
 						buffer_instance->write_io += 1;
+						diskOp(buffer_instance, 1, pageId);
 						// add disk write functionality
 					}
 					// erase the target page
@@ -169,6 +166,7 @@ int WorkloadExecutor::read(Buffer* buffer_instance, int pageId, int algorithm) {
 					buffer_instance->bufferpool[pos].first = pageId;
 					// add read_io
 					buffer_instance->read_io += 1;
+					diskOp(buffer_instance, 0, pageId);
 
 				}
 				// update lru
@@ -197,6 +195,7 @@ int WorkloadExecutor::read(Buffer* buffer_instance, int pageId, int algorithm) {
 					// add read_io
 					// add disk read functionality
 					buffer_instance->read_io += 1;
+					diskOp(buffer_instance, 0, pageId);
 
 				}
 				// cache is full
@@ -208,6 +207,7 @@ int WorkloadExecutor::read(Buffer* buffer_instance, int pageId, int algorithm) {
 					if(get<1>(buffer_instance->bufferpool_wsr[pos]) == true) {
 						// add disk write functionality
 						buffer_instance->write_io += 1;
+						diskOp(buffer_instance, 1, pageId);
 					}
 					// erase the target page
 					get<0>(buffer_instance->bufferpool_wsr[pos]) = -1;
@@ -217,6 +217,7 @@ int WorkloadExecutor::read(Buffer* buffer_instance, int pageId, int algorithm) {
 					get<0>(buffer_instance->bufferpool_wsr[pos]) = pageId;
 					// add read_io
 					buffer_instance->read_io += 1;
+					diskOp(buffer_instance, 0, pageId);
 
 				}
 				// update lru
@@ -240,6 +241,7 @@ int WorkloadExecutor::read(Buffer* buffer_instance, int pageId, int algorithm) {
 					buffer_instance->bufferpool.push_back(make_pair(pageId, false));
 					buffer_instance->fifo_candidates.push_back(pageId);
 					buffer_instance->read_io += 1;
+					diskOp(buffer_instance, 0, pageId);
 				}
 				// full, perform eviction
 				else {
@@ -250,6 +252,7 @@ int WorkloadExecutor::read(Buffer* buffer_instance, int pageId, int algorithm) {
 					// if the page is dirty, write the page into the disk
 					if(buffer_instance->bufferpool[replacement_pos].second == true) {
 						buffer_instance->write_io += 1;
+						diskOp(buffer_instance, 1, pageId);
 						// add disk write functionality
 					}
 					// erase the target page
@@ -260,6 +263,7 @@ int WorkloadExecutor::read(Buffer* buffer_instance, int pageId, int algorithm) {
 					buffer_instance->bufferpool[replacement_pos].first = pageId;
 					// add read_io
 					buffer_instance->read_io += 1;
+					diskOp(buffer_instance, 0, pageId);
 				}
 				// need to add disk read when we eventually add that functionality
 			}
@@ -284,6 +288,7 @@ int WorkloadExecutor::read(Buffer* buffer_instance, int pageId, int algorithm) {
 					buffer_instance->bufferpool.push_back(make_pair(pageId, false));
 					// add read_io
 					buffer_instance->read_io += 1;
+					diskOp(buffer_instance, 0, pageId);
 				}
 				else { //cache is full
 					// find the position to evict
@@ -291,6 +296,7 @@ int WorkloadExecutor::read(Buffer* buffer_instance, int pageId, int algorithm) {
 					// if the page is dirty, write the page into the disk
 					if(buffer_instance->bufferpool[pos].second == true) {
 						buffer_instance->write_io += 1;
+						diskOp(buffer_instance, 1, pageId);
 					}
 					// erase the target page
 					buffer_instance->bufferpool[pos].first = -1;
@@ -300,6 +306,7 @@ int WorkloadExecutor::read(Buffer* buffer_instance, int pageId, int algorithm) {
 					buffer_instance->bufferpool[pos].first = pageId;
 					// add read_io
 					buffer_instance->read_io += 1;
+					diskOp(buffer_instance, 0, pageId);
 
 				}
 				// update lru
@@ -355,6 +362,7 @@ int WorkloadExecutor::write(Buffer* buffer_instance, int pageId, int algorithm) 
 					// read the page from disk, mark the page dirty since we are updatin git
 					buffer_instance->bufferpool.push_back(make_pair(pageId, true));
 					buffer_instance->read_io += 1;
+					diskOp(buffer_instance, 0, pageId);
 				}
 				// otherwise, the cache is full
 				else {
@@ -363,12 +371,14 @@ int WorkloadExecutor::write(Buffer* buffer_instance, int pageId, int algorithm) 
 					// if the page is dirty, write the page into the disk
 					if(buffer_instance->bufferpool[pos].second == true) {
 						buffer_instance->write_io += 1;
+						diskOp(buffer_instance, 1, pageId);
 					}
 					// erase the target page
 					buffer_instance->bufferpool[pos].first = -1;
 					buffer_instance->bufferpool[pos].second = false;
 					// add read_io
 					buffer_instance->read_io += 1;
+					diskOp(buffer_instance, 0, pageId);
 					// put new page in the blank, and then set that page to be dirty
 					buffer_instance->bufferpool[pos].first = pageId;
 					buffer_instance->bufferpool[pos].second = true;
@@ -405,6 +415,7 @@ int WorkloadExecutor::write(Buffer* buffer_instance, int pageId, int algorithm) 
 					// read the page from disk, mark the page dirty since we are updatin git
 					buffer_instance->bufferpool_wsr.push_back(make_tuple(pageId, true, false));
 					buffer_instance->read_io += 1;
+					diskOp(buffer_instance, 0, pageId);
 				}
 				// otherwise, the cache is full
 				else {
@@ -413,6 +424,7 @@ int WorkloadExecutor::write(Buffer* buffer_instance, int pageId, int algorithm) 
 					// if the page is dirty, write the page into the disk
 					if(get<1>(buffer_instance->bufferpool_wsr[pos]) == true) {
 						buffer_instance->write_io += 1;
+						diskOp(buffer_instance, 1, pageId);
 					}
 					// erase the target page in the bufferpool
 					get<0>(buffer_instance->bufferpool_wsr[pos]) = -1;
@@ -422,6 +434,7 @@ int WorkloadExecutor::write(Buffer* buffer_instance, int pageId, int algorithm) 
 					get<2>(buffer_instance->bufferpool_wsr[pos]) = false;
 					// add read_io
 					buffer_instance->read_io += 1;
+					diskOp(buffer_instance, 0, pageId);
 					// get<1>(buffer_instance->bufferpool_wsr[pos]) = true;
 				}
 				// update lru
@@ -447,6 +460,7 @@ int WorkloadExecutor::write(Buffer* buffer_instance, int pageId, int algorithm) 
 					buffer_instance->bufferpool.push_back(make_pair(pageId, true));
 					buffer_instance->fifo_candidates.push_back(pageId);
 					buffer_instance->read_io += 1;
+					diskOp(buffer_instance, 0, pageId);
 					// add disk read
 				}
 				// full, time to replace
@@ -457,6 +471,7 @@ int WorkloadExecutor::write(Buffer* buffer_instance, int pageId, int algorithm) 
 					// if the page is dirty, write the page into the disk
 					if(buffer_instance->bufferpool[replacement_pos].second == true) {
 						buffer_instance->write_io += 1;
+						diskOp(buffer_instance, 1, pageId);
 						// add disk write functionality
 					}
 					// erase the target page put new page in the blank
@@ -464,6 +479,7 @@ int WorkloadExecutor::write(Buffer* buffer_instance, int pageId, int algorithm) 
 					buffer_instance->bufferpool[replacement_pos].first = pageId;
 					// add read_io
 					buffer_instance->read_io += 1;
+					diskOp(buffer_instance, 0, pageId);
 				}
 			}
 			break;
@@ -493,6 +509,7 @@ int WorkloadExecutor::write(Buffer* buffer_instance, int pageId, int algorithm) 
 					//adding to front to be first element in working zone
 					buffer_instance->bufferpool.push_back(make_pair(pageId, true));
 					buffer_instance->read_io += 1;
+					diskOp(buffer_instance, 0, pageId);
 				}
 				// otherwise, the cache is full
 				else {
@@ -501,12 +518,14 @@ int WorkloadExecutor::write(Buffer* buffer_instance, int pageId, int algorithm) 
 					// if the page is dirty, write the page into the disk
 					if(buffer_instance->bufferpool[pos].second == true) {
 						buffer_instance->write_io += 1;
+						diskOp(buffer_instance, 1, pageId);
 					}
 					// erase the target page
 					buffer_instance->bufferpool[pos].first = -1;
 					buffer_instance->bufferpool[pos].second = false;
 					// add read_io
 					buffer_instance->read_io += 1;
+					diskOp(buffer_instance, 0, pageId);
 					// put new page in the blank, and then set that page to be dirty
 					buffer_instance->bufferpool[pos].first = pageId;
 					buffer_instance->bufferpool[pos].second = true;
@@ -536,33 +555,37 @@ int WorkloadExecutor::write(Buffer* buffer_instance, int pageId, int algorithm) 
 
 // Need to calculate disk sector and page size to accomplish proper functionality
 // Perform disk read or write
-void WorkloadExecutor::diskOp(
-	Buffer* buffer_instance, 
-	int operation, 
-	int pageID, 
-	vector<vector<int>> sectorsPages
-	) {
+void WorkloadExecutor::diskOp(Buffer* buffer_instance, int operation, int pageID) {
 	
+	Simulation_Environment* _env = Simulation_Environment::getInstance();
 	// read
 	if(operation == 0) {
-		buffer_instance->read_io += 1;
-	}
-	// write
-	else if(operation == 1) {
-		buffer_instance->write_io += 1;
-		// generate arbitrary bytes
-		string str = "";
-		char c;
-		srand(time(NULL));
-		str = "";
+		string reader;
+		buffer_instance->disk.seekg(buffer_instance->pageSize * pageID, std::ios::beg);
 
-		for(int j = 0; j < buffer_instance->pageSize-1; j++) {
-			c = 'a' + rand()%26;
-			str = str + c;
+		for(int i = 0; i < buffer_instance->pageSize; i++) {
+			// simulate reading byte by byte into cache/memory/registers
+			reader += char(buffer_instance->disk.get());
 		}
 
 	}
+	// write
+	else if(operation == 1) {
+		// increment to next ascii value
+		buffer_instance->disk_write_char = char((int(buffer_instance->disk_write_char) % 26)+int('a'));
+		char c = buffer_instance->disk_write_char;
+		cout << c << endl;
+		buffer_instance->disk.seekg(buffer_instance->pageSize * pageID, std::ios::beg);
 
+		for(int j = 0; j < buffer_instance->pageSize - 1; j++) {
+			buffer_instance->disk.put(c);
+		}
+		buffer_instance->disk.put('\n');
+
+	}
+
+	return;
+	
 }
 
 void WorkloadExecutor::writeDisk(Buffer* buffer_instance) {
@@ -577,20 +600,6 @@ void WorkloadExecutor::writeDisk(Buffer* buffer_instance) {
 			str = str + c;
 		}
 		buffer_instance->disk << str << endl;
-	}
-	buffer_instance->disk.seekg(4096, std::ios::beg);
-	for(int i = 0; i < buffer_instance->pageSize; i++) {
-		//cout << char(buffer_instance->disk.get());
-	}
-	cout << endl;
-	str = "";
-	for(int j = 0; j < buffer_instance->pageSize - 1; j++) {
-		c = 'a';
-		str = str + c;
-	}
-	//buffer_instance->disk.seekp(0, std::ios::beg);
-	for(int i = 0; i < buffer_instance->pageSize-1; i++) {
-		buffer_instance->disk.put('a');
 	}
 	return;
 }

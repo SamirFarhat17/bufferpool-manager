@@ -11,10 +11,10 @@ parser.add_argument("-a", "--algo", help="Algorithm", default="all")
 
 def main():
 
-    buffer_size = [150]  # b
-    disk_size = [1500]  # n
-    num_operations = [7500]  # x
-    perct_reads_writes = [60]  # e
+    buffer_size = [10, 100, 150, 250, 500]  # b
+    disk_size = [1000, 1500, 3000, 5000, 10000]  # n
+    num_operations = [1000, 5000, 7500, 10000]  # x
+    perct_reads_writes = [10, 30, 50, 90, 100]  # e
     skewed_perct = [90]  # s
     skewed_data_perct = [10]  # d
     algorithm = [1, 2, 3, 4, 5]  # a

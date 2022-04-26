@@ -41,6 +41,7 @@ class Buffer {
     static int buffer_miss;
     static int read_io;
     static int write_io;
+    static char disk_write_char;
     static std::chrono::duration <double, milli> timing;
 
     int LRU();
@@ -68,7 +69,7 @@ class WorkloadExecutor {
     static int read(Buffer* buffer_instance, int pageId, int algorithm);
     static int write(Buffer* buffer_instance, int pageId, int algorithm);
     static int search(Buffer* buffer_instance, int pageId, int algorithm);
-	  static void diskOp(Buffer* buffer_instance, int operation, int pageID, vector<vector<int>> sectorsPages);
+	  static void diskOp(Buffer* buffer_instance, int operation, int pageID);
     static void writeDisk(Buffer* buffer_instance);
     static int unpin(Buffer* buffer_instance, int pageId);
   };
