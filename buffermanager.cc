@@ -21,12 +21,10 @@ int runWorkload(Simulation_Environment* _env);
 
 int main(int argc, char *argvx[]) {
     Simulation_Environment* _env = Simulation_Environment::getInstance();
-
     // Take input parameters
     if (parse_arguments(argc, argvx, _env)) {
         exit(1);
     }
-
     // Print parameters
     printParameters(_env);
     if (_env->num_operations > 0) {
@@ -40,10 +38,11 @@ int main(int argc, char *argvx[]) {
         // Execute Workload
         int s = runWorkload(_env);
     }
+    // Prints for sanity checks
     Buffer::printBuffer();
-    Buffer::writeResults();
-    // Print Different Statistics
     Buffer::printStats();
+    // Write results in extraction friendly way for processing
+    Buffer::writeResults();
     return 0;
 }
 
@@ -52,13 +51,14 @@ int runWorkload(Simulation_Environment* _env) {
 
     // This method opens the workload file and according to the workload calls executor's read() or write() method
     Buffer* buffer_instance = Buffer::getBufferInstance(_env);
-    //cout << "initiation checked" << endl;
     bufmanager::WorkloadExecutor workload_executer;
     ifstream workload_file;
     workload_file.open("workload.txt");
-    buffer_instance->disk.open("disk.txt", ios::in | ios::out);
+    // reopen disk and populate
+    remove("disk.txt");
+    buffer_instance->disk.open("disk.txt", ios::in | ios::out | std::ofstream::trunc);
     workload_executer.writeDisk(buffer_instance);
-    
+    // Start clock for timing after high overhead preamblem 
     std::chrono::time_point<std::chrono::steady_clock> start = chrono::steady_clock::now();
     assert(workload_file);
 
