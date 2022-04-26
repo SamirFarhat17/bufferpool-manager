@@ -686,7 +686,6 @@ int Buffer::LRUWSR() {
     }
     // remove victim from the LRU list
     lru_candidate.pop_back();
-    std::cout << "currently using LRU-WSR" << endl;
     return index;
 }
 

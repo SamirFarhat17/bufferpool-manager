@@ -1,0 +1,22 @@
+b	 n	 x	 e	 e'	 a	 s	 d	 p	 k  
+10	 1000	 10000	 100	 0	 3	 90	 10	 0	 512	
+generation succeed
+Page: 0 PageID: 58 Dirty-Bit: 0
+Page: 1 PageID: 39 Dirty-Bit: 0
+Page: 2 PageID: 75 Dirty-Bit: 0
+Page: 3 PageID: 57 Dirty-Bit: 0
+Page: 4 PageID: 62 Dirty-Bit: 0
+Page: 5 PageID: 74 Dirty-Bit: 0
+Page: 6 PageID: 15 Dirty-Bit: 0
+Page: 7 PageID: 60 Dirty-Bit: 0
+Page: 8 PageID: 85 Dirty-Bit: 0
+Page: 9 PageID: 48 Dirty-Bit: 0
+******************************************************
+Printing Stats...
+Number of operations: 10000
+Buffer Hit: 804
+Buffer Miss: 9195
+Read IO: 9196
+Write IO: 0
+Global Clock: 61.6301ms
+******************************************************

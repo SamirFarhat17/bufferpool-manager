@@ -1,0 +1,112 @@
+b	 n	 x	 e	 e'	 a	 s	 d	 p	 k  
+100	 3000	 5000	 50	 50	 3	 90	 10	 0	 4096	
+generation succeed
+Page: 0 PageID: 100 Dirty-Bit: 0
+Page: 1 PageID: 62 Dirty-Bit: 1
+Page: 2 PageID: 84 Dirty-Bit: 1
+Page: 3 PageID: 298 Dirty-Bit: 1
+Page: 4 PageID: 46 Dirty-Bit: 1
+Page: 5 PageID: 184 Dirty-Bit: 1
+Page: 6 PageID: 222 Dirty-Bit: 1
+Page: 7 PageID: 201 Dirty-Bit: 1
+Page: 8 PageID: 260 Dirty-Bit: 1
+Page: 9 PageID: 112 Dirty-Bit: 0
+Page: 10 PageID: 256 Dirty-Bit: 1
+Page: 11 PageID: 226 Dirty-Bit: 0
+Page: 12 PageID: 190 Dirty-Bit: 1
+Page: 13 PageID: 276 Dirty-Bit: 1
+Page: 14 PageID: 151 Dirty-Bit: 0
+Page: 15 PageID: 2019 Dirty-Bit: 1
+Page: 16 PageID: 197 Dirty-Bit: 0
+Page: 17 PageID: 23 Dirty-Bit: 1
+Page: 18 PageID: 1369 Dirty-Bit: 0
+Page: 19 PageID: 255 Dirty-Bit: 1
+Page: 20 PageID: 74 Dirty-Bit: 1
+Page: 21 PageID: 180 Dirty-Bit: 1
+Page: 22 PageID: 177 Dirty-Bit: 1
+Page: 23 PageID: 75 Dirty-Bit: 1
+Page: 24 PageID: 275 Dirty-Bit: 0
+Page: 25 PageID: 1813 Dirty-Bit: 1
+Page: 26 PageID: 1222 Dirty-Bit: 1
+Page: 27 PageID: 2 Dirty-Bit: 1
+Page: 28 PageID: 2698 Dirty-Bit: 0
+Page: 29 PageID: 173 Dirty-Bit: 0
+Page: 30 PageID: 134 Dirty-Bit: 0
+Page: 31 PageID: 232 Dirty-Bit: 0
+Page: 32 PageID: 230 Dirty-Bit: 0
+Page: 33 PageID: 708 Dirty-Bit: 0
+Page: 34 PageID: 3 Dirty-Bit: 0
+Page: 35 PageID: 203 Dirty-Bit: 1
+Page: 36 PageID: 138 Dirty-Bit: 1
+Page: 37 PageID: 870 Dirty-Bit: 0
+Page: 38 PageID: 1765 Dirty-Bit: 0
+Page: 39 PageID: 163 Dirty-Bit: 0
+Page: 40 PageID: 171 Dirty-Bit: 0
+Page: 41 PageID: 262 Dirty-Bit: 0
+Page: 42 PageID: 217 Dirty-Bit: 0
+Page: 43 PageID: 259 Dirty-Bit: 1
+Page: 44 PageID: 289 Dirty-Bit: 1
+Page: 45 PageID: 239 Dirty-Bit: 1
+Page: 46 PageID: 235 Dirty-Bit: 0
+Page: 47 PageID: 99 Dirty-Bit: 1
+Page: 48 PageID: 6 Dirty-Bit: 1
+Page: 49 PageID: 131 Dirty-Bit: 1
+Page: 50 PageID: 229 Dirty-Bit: 1
+Page: 51 PageID: 87 Dirty-Bit: 0
+Page: 52 PageID: 71 Dirty-Bit: 1
+Page: 53 PageID: 64 Dirty-Bit: 0
+Page: 54 PageID: 269 Dirty-Bit: 0
+Page: 55 PageID: 277 Dirty-Bit: 1
+Page: 56 PageID: 20 Dirty-Bit: 0
+Page: 57 PageID: 2220 Dirty-Bit: 1
+Page: 58 PageID: 288 Dirty-Bit: 1
+Page: 59 PageID: 292 Dirty-Bit: 0
+Page: 60 PageID: 2370 Dirty-Bit: 1
+Page: 61 PageID: 243 Dirty-Bit: 0
+Page: 62 PageID: 426 Dirty-Bit: 0
+Page: 63 PageID: 245 Dirty-Bit: 1
+Page: 64 PageID: 295 Dirty-Bit: 1
+Page: 65 PageID: 291 Dirty-Bit: 1
+Page: 66 PageID: 85 Dirty-Bit: 1
+Page: 67 PageID: 182 Dirty-Bit: 1
+Page: 68 PageID: 273 Dirty-Bit: 0
+Page: 69 PageID: 101 Dirty-Bit: 1
+Page: 70 PageID: 148 Dirty-Bit: 0
+Page: 71 PageID: 128 Dirty-Bit: 1
+Page: 72 PageID: 206 Dirty-Bit: 0
+Page: 73 PageID: 287 Dirty-Bit: 0
+Page: 74 PageID: 137 Dirty-Bit: 1
+Page: 75 PageID: 271 Dirty-Bit: 1
+Page: 76 PageID: 2421 Dirty-Bit: 0
+Page: 77 PageID: 181 Dirty-Bit: 1
+Page: 78 PageID: 7 Dirty-Bit: 1
+Page: 79 PageID: 274 Dirty-Bit: 0
+Page: 80 PageID: 258 Dirty-Bit: 1
+Page: 81 PageID: 1202 Dirty-Bit: 0
+Page: 82 PageID: 82 Dirty-Bit: 1
+Page: 83 PageID: 268 Dirty-Bit: 1
+Page: 84 PageID: 183 Dirty-Bit: 0
+Page: 85 PageID: 196 Dirty-Bit: 1
+Page: 86 PageID: 86 Dirty-Bit: 0
+Page: 87 PageID: 41 Dirty-Bit: 0
+Page: 88 PageID: 250 Dirty-Bit: 0
+Page: 89 PageID: 21 Dirty-Bit: 1
+Page: 90 PageID: 199 Dirty-Bit: 1
+Page: 91 PageID: 2117 Dirty-Bit: 1
+Page: 92 PageID: 5 Dirty-Bit: 0
+Page: 93 PageID: 19 Dirty-Bit: 0
+Page: 94 PageID: 247 Dirty-Bit: 0
+Page: 95 PageID: 626 Dirty-Bit: 0
+Page: 96 PageID: 187 Dirty-Bit: 0
+Page: 97 PageID: 55 Dirty-Bit: 1
+Page: 98 PageID: 168 Dirty-Bit: 0
+Page: 99 PageID: 192 Dirty-Bit: 1
+******************************************************
+Printing Stats...
+Number of operations: 5000
+Buffer Hit: 1304
+Buffer Miss: 3695
+Read IO: 3696
+Write IO: 2132
+Global Clock: 223.242ms
+******************************************************

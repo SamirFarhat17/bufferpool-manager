@@ -1,0 +1,22 @@
+b	 n	 x	 e	 e'	 a	 s	 d	 p	 k  
+10	 3000	 1000	 10	 90	 2	 90	 10	 0	 512	
+generation succeed
+Page: 0 PageId: 158 Dirty-Bit: 1 Cold Flag: 0
+Page: 1 PageId: 3 Dirty-Bit: 1 Cold Flag: 1
+Page: 2 PageId: 242 Dirty-Bit: 1 Cold Flag: 1
+Page: 3 PageId: 103 Dirty-Bit: 1 Cold Flag: 1
+Page: 4 PageId: 115 Dirty-Bit: 1 Cold Flag: 1
+Page: 5 PageId: 231 Dirty-Bit: 1 Cold Flag: 0
+Page: 6 PageId: 72 Dirty-Bit: 1 Cold Flag: 0
+Page: 7 PageId: 187 Dirty-Bit: 1 Cold Flag: 0
+Page: 8 PageId: 99 Dirty-Bit: 1 Cold Flag: 0
+Page: 9 PageId: 155 Dirty-Bit: 1 Cold Flag: 1
+******************************************************
+Printing Stats...
+Number of operations: 1000
+Buffer Hit: 20
+Buffer Miss: 979
+Read IO: 980
+Write IO: 884
+Global Clock: 13.4988ms
+******************************************************
