@@ -79,6 +79,7 @@ int runWorkload(Simulation_Environment* _env) {
         instruction = '\0';
     }
     buffer_instance->disk.close();
+    // Get time passed 
     std::chrono::time_point<std::chrono::steady_clock> end = chrono::steady_clock::now();
     buffer_instance->timing = chrono::duration <double, milli> (end - start);
     return 1;
