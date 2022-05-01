@@ -23,6 +23,8 @@ def main():
     print(sys.argv[2])
     parameters = [buffer_size, disk_size, num_operations, perct_reads_writes, 
                 skewed_perct, skewed_data_perct, page_size]
+    skew_parameters = [[100], [1500], [3000], [50], 
+                [10, 30, 50, 70,100], [90], [4096]]
 
     if sys.argv[2] == "all":
         parameters.append(algorithm)
@@ -50,7 +52,13 @@ def main():
             for combination in itertools.product(*parameters):
                 system(build_command(combination[0], combination[1], combination[2],
                             combination[3], combination[4], combination[5], 3, combination[6]))
-
+        elif sys.argv[2] == "skew":
+            skew_parameters.append(algorithm)
+            for combination in itertools.product(*skew_parameters):
+                print(build_command(combination[0], combination[1], combination[2], combination[3], 
+                            combination[4], combination[5], combination[7], combination[6]))
+                system(build_command(combination[0], combination[1], combination[2],
+                            combination[3], combination[4], combination[5], combination[7], combination[6]))
 
 if __name__ == '__main__':
     main()

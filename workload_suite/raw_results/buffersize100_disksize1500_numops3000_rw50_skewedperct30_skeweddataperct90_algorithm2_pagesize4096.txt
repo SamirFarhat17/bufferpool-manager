@@ -1,0 +1,112 @@
+b	 n	 x	 e	 e'	 a	 s	 d	 p	 k  
+100	 1500	 3000	 50	 50	 2	 30	 90	 0	 4096	
+generation succeed
+Page: 0 PageId: 149 Dirty-Bit: 1 Cold Flag: 1
+Page: 1 PageId: 495 Dirty-Bit: 1 Cold Flag: 0
+Page: 2 PageId: 285 Dirty-Bit: 1 Cold Flag: 0
+Page: 3 PageId: 914 Dirty-Bit: 1 Cold Flag: 1
+Page: 4 PageId: 52 Dirty-Bit: 0 Cold Flag: 1
+Page: 5 PageId: 1148 Dirty-Bit: 1 Cold Flag: 0
+Page: 6 PageId: 1437 Dirty-Bit: 1 Cold Flag: 0
+Page: 7 PageId: 1397 Dirty-Bit: 0 Cold Flag: 1
+Page: 8 PageId: 1408 Dirty-Bit: 1 Cold Flag: 0
+Page: 9 PageId: 135 Dirty-Bit: 1 Cold Flag: 0
+Page: 10 PageId: 1360 Dirty-Bit: 1 Cold Flag: 0
+Page: 11 PageId: 1456 Dirty-Bit: 1 Cold Flag: 0
+Page: 12 PageId: 1416 Dirty-Bit: 0 Cold Flag: 1
+Page: 13 PageId: 1446 Dirty-Bit: 1 Cold Flag: 1
+Page: 14 PageId: 1483 Dirty-Bit: 1 Cold Flag: 1
+Page: 15 PageId: 1496 Dirty-Bit: 1 Cold Flag: 0
+Page: 16 PageId: 1466 Dirty-Bit: 1 Cold Flag: 0
+Page: 17 PageId: 1038 Dirty-Bit: 1 Cold Flag: 0
+Page: 18 PageId: 53 Dirty-Bit: 1 Cold Flag: 0
+Page: 19 PageId: 782 Dirty-Bit: 1 Cold Flag: 0
+Page: 20 PageId: 1065 Dirty-Bit: 0 Cold Flag: 1
+Page: 21 PageId: 768 Dirty-Bit: 1 Cold Flag: 0
+Page: 22 PageId: 1217 Dirty-Bit: 0 Cold Flag: 1
+Page: 23 PageId: 1362 Dirty-Bit: 0 Cold Flag: 1
+Page: 24 PageId: 1427 Dirty-Bit: 1 Cold Flag: 1
+Page: 25 PageId: 158 Dirty-Bit: 0 Cold Flag: 1
+Page: 26 PageId: 1422 Dirty-Bit: 1 Cold Flag: 1
+Page: 27 PageId: 555 Dirty-Bit: 0 Cold Flag: 1
+Page: 28 PageId: 1477 Dirty-Bit: 1 Cold Flag: 0
+Page: 29 PageId: 443 Dirty-Bit: 1 Cold Flag: 1
+Page: 30 PageId: 1461 Dirty-Bit: 1 Cold Flag: 0
+Page: 31 PageId: 1439 Dirty-Bit: 1 Cold Flag: 0
+Page: 32 PageId: 1335 Dirty-Bit: 1 Cold Flag: 0
+Page: 33 PageId: 542 Dirty-Bit: 0 Cold Flag: 1
+Page: 34 PageId: 1388 Dirty-Bit: 1 Cold Flag: 0
+Page: 35 PageId: 126 Dirty-Bit: 1 Cold Flag: 0
+Page: 36 PageId: 1442 Dirty-Bit: 1 Cold Flag: 1
+Page: 37 PageId: 1424 Dirty-Bit: 0 Cold Flag: 1
+Page: 38 PageId: 1425 Dirty-Bit: 1 Cold Flag: 1
+Page: 39 PageId: 1365 Dirty-Bit: 1 Cold Flag: 1
+Page: 40 PageId: 1359 Dirty-Bit: 1 Cold Flag: 1
+Page: 41 PageId: 41 Dirty-Bit: 0 Cold Flag: 1
+Page: 42 PageId: 115 Dirty-Bit: 1 Cold Flag: 1
+Page: 43 PageId: 567 Dirty-Bit: 1 Cold Flag: 0
+Page: 44 PageId: 436 Dirty-Bit: 1 Cold Flag: 1
+Page: 45 PageId: 1469 Dirty-Bit: 1 Cold Flag: 1
+Page: 46 PageId: 164 Dirty-Bit: 1 Cold Flag: 1
+Page: 47 PageId: 1471 Dirty-Bit: 1 Cold Flag: 0
+Page: 48 PageId: 1382 Dirty-Bit: 1 Cold Flag: 1
+Page: 49 PageId: 957 Dirty-Bit: 1 Cold Flag: 1
+Page: 50 PageId: 1375 Dirty-Bit: 1 Cold Flag: 1
+Page: 51 PageId: 1351 Dirty-Bit: 0 Cold Flag: 1
+Page: 52 PageId: 1432 Dirty-Bit: 1 Cold Flag: 0
+Page: 53 PageId: 1024 Dirty-Bit: 1 Cold Flag: 1
+Page: 54 PageId: 1354 Dirty-Bit: 1 Cold Flag: 1
+Page: 55 PageId: 333 Dirty-Bit: 1 Cold Flag: 0
+Page: 56 PageId: 1410 Dirty-Bit: 0 Cold Flag: 1
+Page: 57 PageId: 1399 Dirty-Bit: 1 Cold Flag: 1
+Page: 58 PageId: 680 Dirty-Bit: 0 Cold Flag: 1
+Page: 59 PageId: 1454 Dirty-Bit: 1 Cold Flag: 0
+Page: 60 PageId: 1443 Dirty-Bit: 1 Cold Flag: 1
+Page: 61 PageId: 1373 Dirty-Bit: 0 Cold Flag: 1
+Page: 62 PageId: 1462 Dirty-Bit: 1 Cold Flag: 0
+Page: 63 PageId: 1423 Dirty-Bit: 1 Cold Flag: 0
+Page: 64 PageId: 1487 Dirty-Bit: 1 Cold Flag: 1
+Page: 65 PageId: 1395 Dirty-Bit: 1 Cold Flag: 0
+Page: 66 PageId: 1415 Dirty-Bit: 1 Cold Flag: 0
+Page: 67 PageId: 1445 Dirty-Bit: 0 Cold Flag: 1
+Page: 68 PageId: 1393 Dirty-Bit: 0 Cold Flag: 1
+Page: 69 PageId: 1085 Dirty-Bit: 1 Cold Flag: 0
+Page: 70 PageId: 1407 Dirty-Bit: 1 Cold Flag: 0
+Page: 71 PageId: 1421 Dirty-Bit: 1 Cold Flag: 0
+Page: 72 PageId: 1152 Dirty-Bit: 1 Cold Flag: 1
+Page: 73 PageId: 481 Dirty-Bit: 0 Cold Flag: 1
+Page: 74 PageId: 1476 Dirty-Bit: 1 Cold Flag: 0
+Page: 75 PageId: 1479 Dirty-Bit: 1 Cold Flag: 1
+Page: 76 PageId: 1457 Dirty-Bit: 1 Cold Flag: 0
+Page: 77 PageId: 1475 Dirty-Bit: 1 Cold Flag: 1
+Page: 78 PageId: 40 Dirty-Bit: 1 Cold Flag: 1
+Page: 79 PageId: 388 Dirty-Bit: 1 Cold Flag: 1
+Page: 80 PageId: 1249 Dirty-Bit: 0 Cold Flag: 1
+Page: 81 PageId: 1452 Dirty-Bit: 0 Cold Flag: 1
+Page: 82 PageId: 1369 Dirty-Bit: 1 Cold Flag: 1
+Page: 83 PageId: 1356 Dirty-Bit: 1 Cold Flag: 0
+Page: 84 PageId: 494 Dirty-Bit: 0 Cold Flag: 1
+Page: 85 PageId: 1472 Dirty-Bit: 0 Cold Flag: 1
+Page: 86 PageId: 1426 Dirty-Bit: 1 Cold Flag: 1
+Page: 87 PageId: 1467 Dirty-Bit: 1 Cold Flag: 1
+Page: 88 PageId: 857 Dirty-Bit: 1 Cold Flag: 1
+Page: 89 PageId: 1499 Dirty-Bit: 0 Cold Flag: 1
+Page: 90 PageId: 1368 Dirty-Bit: 1 Cold Flag: 1
+Page: 91 PageId: 101 Dirty-Bit: 1 Cold Flag: 0
+Page: 92 PageId: 1372 Dirty-Bit: 1 Cold Flag: 0
+Page: 93 PageId: 1374 Dirty-Bit: 0 Cold Flag: 1
+Page: 94 PageId: 1398 Dirty-Bit: 1 Cold Flag: 1
+Page: 95 PageId: 1383 Dirty-Bit: 0 Cold Flag: 1
+Page: 96 PageId: 778 Dirty-Bit: 1 Cold Flag: 0
+Page: 97 PageId: 1355 Dirty-Bit: 1 Cold Flag: 1
+Page: 98 PageId: 961 Dirty-Bit: 1 Cold Flag: 0
+Page: 99 PageId: 1417 Dirty-Bit: 1 Cold Flag: 1
+******************************************************
+Printing Stats...
+Number of operations: 3000
+Buffer Hit: 900
+Buffer Miss: 2099
+Read IO: 2100
+Write IO: 1122
+Global Clock: 120.928ms
+******************************************************
