@@ -29,7 +29,7 @@ int Buffer::write_io = 0;
 int Buffer::pageSize = 0;
 char Buffer::disk_write_char = '0';
 chrono::duration <double, milli> Buffer::timing;
-const vector<string> algorithms{ "LRU", "LRUWSR", "FIFO", "CFLRU", "LFU"};
+const vector<string> algorithms{ "LRU", "LRUWSR", "FIFO", "CFLRU"};
 
 
 Buffer::Buffer(Simulation_Environment *_env) {
