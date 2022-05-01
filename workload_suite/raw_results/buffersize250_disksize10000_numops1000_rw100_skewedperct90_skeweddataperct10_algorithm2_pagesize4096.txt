@@ -258,5 +258,5 @@ Buffer Hit: 167
 Buffer Miss: 832
 Read IO: 833
 Write IO: 0
-Global Clock: 33.8225ms
+Global Clock: 34.1578ms
 ******************************************************

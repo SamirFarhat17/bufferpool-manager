@@ -40,18 +40,20 @@ def main():
             for combination in itertools.product(*parameters):
                 system(build_command(combination[0], combination[1], combination[2],
                             combination[3], combination[4], combination[5], 0, combination[6]))
-        elif sys.argv[2] == "lru-wsr":
+        elif sys.argv[2] == "lruwsr":
             for combination in itertools.product(*parameters):
                 system(build_command(combination[0], combination[1], combination[2],
                             combination[3], combination[4], combination[5], 1, combination[6]))
-        elif sys.argv[2] == "lru-cf":
-            for combination in itertools.product(*parameters):
-                system(build_command(combination[0], combination[1], combination[2],
-                            combination[3], combination[4], combination[5], 2, combination[6]))
         elif sys.argv[2] == "fifo":
             for combination in itertools.product(*parameters):
                 system(build_command(combination[0], combination[1], combination[2],
                             combination[3], combination[4], combination[5], 3, combination[6]))
+    
+        elif sys.argv[2] == "cflru":
+            for combination in itertools.product(*parameters):
+                system(build_command(combination[0], combination[1], combination[2],
+                            combination[3], combination[4], combination[5], 2, combination[6]))
+       
         elif sys.argv[2] == "skew":
             skew_parameters.append(algorithm)
             for combination in itertools.product(*skew_parameters):

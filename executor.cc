@@ -762,7 +762,7 @@ void Buffer::writeResults() {
 	// Make filename such that it can be parsed for stats of interest
 	string filename = "b-" + buffer_size_in_pages + u + "n-" + disk_size_in_pages + u + "x-" 
 		+ num_operations + u + "e-" + perct_reads + perct_writes + u + "s-" + skewed_perct
-		+ "d-" + skewed_data_perct + u + "v-" + verbosity + u + "a-" + algorithms.at(algo) 
+		+ "d-" + skewed_data_perct + u + "v-" + verbosity + u + "a-" + algorithms.at(algo-1) 
 		+ "k-" + page_size;
 	// write the file with the run statistics
 	ofstream statFile;
