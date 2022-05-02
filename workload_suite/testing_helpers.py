@@ -1,7 +1,6 @@
 def build_command(b, n, x, e, s, d, a, k):
     command = "./buffermanager -b {} -n {} -x {} -e {} " \
-              "-s {} -d {} -a {} -k {} > {}".format(b, n, x, e, s, d, a, k, 
-		      file_name(b, n, x, e, s, d, a, k, "txt"))
+              "-s {} -d {} -a {} -k {}".format(b, n, x, e, s, d, a, k)
     return command
 
 
@@ -19,14 +18,16 @@ def file_name(b, n, x, e, s, d, a, k, extension):
 
 
 def discriminate(filename):
-    if int(get_params(filename, "b")) > int(int(get_params(filename, "n")/10)):
+    if int(get_params(filename, "b")) > int(get_params(filename, "n"))/10:
         return False
     if get_params(filename, "e") != "1090" and get_params(filename, "e") != "5050" and get_params(filename, "e") != "1000":
+        return False
+    if int(get_params(filename, "k")) != 4096:
         return False
     return True
 
 def discriminate_skew(filename):
-    if int(get_params(filename, "b")) > int(int(get_params(filename, "n"))/10):
+    if int(get_params(filename, "b")) > int(get_params(filename, "n"))/10:
         return False
     if get_params(filename, "e") != "5050":
         return False
