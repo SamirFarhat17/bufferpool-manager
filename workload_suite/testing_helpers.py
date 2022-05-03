@@ -18,9 +18,9 @@ def file_name(b, n, x, e, s, d, a, k, extension):
 
 
 def discriminate(filename):
-    if int(get_params(filename, "b")) > int(get_params(filename, "n"))/10:
-        return False
     if get_params(filename, "e") != "1090" and get_params(filename, "e") != "5050" and get_params(filename, "e") != "1000":
+        return False
+    if int(get_params(filename, "k")) <= 10:
         return False
     if int(get_params(filename, "k")) != 4096:
         return False
