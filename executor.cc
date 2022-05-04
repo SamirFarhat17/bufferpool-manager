@@ -30,6 +30,7 @@ int Buffer::pageSize = 0;
 char Buffer::disk_write_char = '0';
 chrono::duration <double, milli> Buffer::timing;
 const vector<string> algorithms{ "LRU", "LRUWSR", "FIFO", "CFLRU"};
+double window_size = .3; //default
 
 
 Buffer::Buffer(Simulation_Environment *_env) {
@@ -38,6 +39,7 @@ Buffer::Buffer(Simulation_Environment *_env) {
     lru_candidate.clear();
     max_buffer_size = _env->buffer_size_in_pages;
 	pageSize = _env->page_size;
+	window_size = (_env->perct_window) * .01;
 
 	// initialize the cache
 	// for(int i = 0; i < max_buffer_size; i++) bufferpool.push_back(make_pair(-1, false));
@@ -609,7 +611,7 @@ int Buffer::LRU() {
 //return the evict position in bufferpool for cflru algorithm 
 int Buffer::CFLRU(){
 	int cur_size = lru_candidate.size();
-	int window_size = ceil(cur_size/3); 
+	int real_window_size = ceil(window_size * cur_size);
 	/*
 	the windowsize for the clean_first section is the ceilingcurrent amount of 
 	items in buffer/3, so that it is flexible based on the current demands 
@@ -620,8 +622,8 @@ int Buffer::CFLRU(){
 	int pageId = -1;
 
 	//going to go through the candidates in reverse order in the given window looking for a clean page
-	for(auto i = lru_candidate.rbegin(); count < window_size; i++){
-		if(i[0] != -1){
+	for(auto i = lru_candidate.rbegin(); count < real_window_size; i++){
+		if(buffer_instance->bufferpool[i[0]].second == false){ //first clean page
 			//this is the page to evict
 			pageId = i[0];
 			lru_candidate.erase(lru_candidate.begin() + (lru_candidate.size() - count - 1)); //erase this element from the cflru

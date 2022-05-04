@@ -23,6 +23,8 @@ Simulation_Environment::Simulation_Environment() {
 
     int pin_mode = 0;
     int verbosity = 0;
+
+    int perct_window = 30; //default window is 30% of curr size of buffer
 }
 
 Simulation_Environment* Simulation_Environment::getInstance() {

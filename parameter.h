@@ -31,6 +31,7 @@ class Simulation_Environment {
     int algorithm;         // a
 
     int page_size;        //k
+    int perct_window;    //w
 
 };
 

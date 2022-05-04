@@ -15,10 +15,10 @@ cflru = []
 
 def main():
     if sys.argv[2] == "algorithm":
-        for filename in listdir(path.abspath("runs")):
+        for filename in listdir(path.abspath("workload_suite/runs")):
             if(discriminate_skew(filename)):
                 print(filename)
-        for filename in listdir(path.abspath("runs")):
+        for filename in listdir(path.abspath("workload_suite/runs")):
             if(discriminate(filename)):
                 if get_params(filename, "a") == "LRU":
                     lru.append(filename)
