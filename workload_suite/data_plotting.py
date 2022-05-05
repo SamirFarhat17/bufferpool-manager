@@ -45,14 +45,6 @@ def main():
     average_timings = []
 
     if sys.argv[2] == "algorithm":
-<<<<<<< HEAD
-        for filename in listdir(path.abspath("workload_suite/runs")):
-            if(discriminate_skew(filename)):
-                print(filename)
-        for filename in listdir(path.abspath("workload_suite/runs")):
-            if(discriminate(filename)):
-=======
-        
         for filename in listdir(path.abspath("runs")):
             if discriminate(filename) and get_params(filename, "e") == "1000":
                 buffersize = int(get_params(filename, "b"))
@@ -168,7 +160,6 @@ def main():
             if discriminate(filename) and get_params(filename, "e") == "1090":
                 buffersize = int(get_params(filename, "b"))
                 num_ops = int(get_params(filename, "x"))
->>>>>>> fd41a09f070679f5ae19edf0c4d6b09179d6e737
                 if get_params(filename, "a") == "LRU":
                     file = open("runs/" + filename, "r")
                     lines = file.readlines()
