@@ -69,7 +69,35 @@ Currently the pin mode (p) is disabled because it is only needed for a disk in r
 
 
 ## Demo
+First we will remove the generated buffermanager using make clean and regenerate the buffermanager.
+Then for example we want to run the follwing command:
 
+```bash
+./buffermanager -b 250 -n 1000 -x 5000 -e 60 -a 1 -s 90 -d 10 -k 512
+```
+
+This means the program will generate a workload of 5000 operations with 60% reads where the bufferpool size is 250 pages and disk size is 1000 pages. 
+The workload is skewed (90% operations are on 10% data).The replacement algorithm here is LRU (-a 1)
+
+![Alt text](https://github.com/SamirFarhat17/bufferpool-manager/blob/main/pics/LRU_input.png?raw=true "Optional Title")
+
+And here is the result
+
+![Alt text](https://github.com/SamirFarhat17/bufferpool-manager/blob/main/pics/LRU_output.png?raw=true "Optional Title")
+
+We can also run the example command in the previous section
+
+```bash
+./buffermanager -b 150 -n 1500 -x 7500 -e 60 -a 4 -s 90 -d 10 -k 4096 -w 20
+```
+
+![Alt text](https://github.com/SamirFarhat17/bufferpool-manager/blob/main/pics/CFLRU_input.png?raw=true "Optional Title")
+
+And here is the result
+
+![Alt text](https://github.com/SamirFarhat17/bufferpool-manager/blob/main/pics/CFLRU_output.png?raw=true "Optional Title")
+
+The implementation details can be found in executor.cc and report. The testing results and analysis can be also found in the report.
 
 ## Contact
 
