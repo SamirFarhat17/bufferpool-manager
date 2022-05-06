@@ -99,6 +99,11 @@ And here is the result
 
 The implementation details can be found in executor.cc and report. The testing results and analysis can be also found in the report.
 
+## Disclaimer
+
+All team members have tested our program (all replacement algorithms) with different scale of workloads. But in rare cases the program would return segmentation fault on the first few runs. This did not happen for every devices after testing (we tested with 3 devices, only 1 had this issue) so we believe it is not an implementation error. If you encountered this problem when running the program, please try to run a few different commands and return to that command again or contact any team members to solve this issue. 
+
 ## Contact
 
-Project Mentor was Papon, email him at papon@bu.edu.
+If you have any questions please feel free to see Papon in office hours, or
+email him at papon@bu.edu.
