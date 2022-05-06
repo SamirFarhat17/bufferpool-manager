@@ -101,5 +101,4 @@ The implementation details can be found in executor.cc and report. The testing r
 
 ## Contact
 
-If you have any questions please feel free to see Papon in office hours, or
-email him at papon@bu.edu.
+Project Mentor was Papon, email him at papon@bu.edu.
