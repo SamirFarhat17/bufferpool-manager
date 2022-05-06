@@ -51,7 +51,7 @@ You can view the default values by running the following command
 ```bash
 ./buffermanager -h
 ```
-These are the following parameters of the bufferpool. Further explanation on them can be found above.
+These are the following parameters of the bufferpool. Further explanation on them can be found above or refer back to the report.
 ```bash
 int buffer_size_in_pages;	// b
 int disk_size_in_pages;   	// n
@@ -65,9 +65,10 @@ int verbosity;         		// v
 int page_size               //k
 int perct_window            //w
 ```
+Currently the pin mode (p) is disabled because it is only needed for a disk in real life. Since this program is running based on our self-implemented disk operator, the pin mode is not applicable.
 
-Currently this implementation has no bufferpool and no way to simulate read/writes. 
-Your job is to implement them and implement two/three eviction policies.
+
+## Demo
 
 
 ## Contact
