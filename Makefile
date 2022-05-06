@@ -22,4 +22,5 @@ buffermanager: buffermanager.cc parameter.cc executor.cc workload_generator.cc
 	$(CXX) $(CXX_FLAGS)  $@.cc -o$@ parameter.cc executor.cc workload_generator.cc
 
 clean:
+	rm -f disk.txt workload.txt
 	rm -rf buffermanager  
