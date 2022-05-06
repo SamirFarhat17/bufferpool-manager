@@ -12,14 +12,14 @@ parser.add_argument("-a", "--algo", help="Algorithm", default="all")
 def main():
     chdir("..")
     count = 0
-    buffer_size = [10, 100, 250, 500]  # b
-    disk_size = [1000, 1500, 3000, 10000]  # n
+    buffer_size = [100, 250, 500]  # b
+    disk_size = [1500, 3000, 5000, 10000]  # n
     num_operations = [1000, 5000, 10000]  # x
     perct_reads_writes = [10, 50, 100]  # e
     skewed_perct = [90]  # s
     skewed_data_perct = [10]  # d
     algorithm = [1, 2, 3, 4]  # a
-    page_size = [128, 512, 1024, 4096, 8192]
+    page_size = [4096, 8192]
     print(sys.argv[2])
     parameters = [buffer_size, disk_size, num_operations, perct_reads_writes, 
                 skewed_perct, skewed_data_perct, page_size]

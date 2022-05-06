@@ -252,7 +252,7 @@ def main():
         average_hitrate.append(sum(fifty_hitrate)/len(fifty_hitrate))
         average_hitrate.append(sum(seventy_hitrate)/len(seventy_hitrate))
         average_hitrate.append(sum(all_hitrate)/len(all_hitrate))
-        plot_skews(average_hitrate, "LRU-hitrate-variation-with-skew", "policy", "average hit per-operation")
+        plot_skews(average_hitrate, "LRU-hitrate-variation-with-skew", "skew-percentage", "average hit per-operation")
 
         ten_hitrate = []
         thirty_hitrate = []
@@ -297,7 +297,7 @@ def main():
         average_hitrate.append(sum(seventy_hitrate)/len(seventy_hitrate))
         average_hitrate.append(sum(all_hitrate)/len(all_hitrate))
 
-        plot_skews(average_hitrate, "LRUWSR-hitrate-variation-with-skew", "policy", "average hit per-operation")
+        plot_skews(average_hitrate, "LRUWSR-hitrate-variation-with-skew", "skew-percentage", "average hit per-operation")
         
         
         ten_hitrate = []
@@ -342,7 +342,7 @@ def main():
         average_hitrate.append(sum(fifty_hitrate)/len(fifty_hitrate))
         average_hitrate.append(sum(seventy_hitrate)/len(seventy_hitrate))
         average_hitrate.append(sum(all_hitrate)/len(all_hitrate))
-        plot_skews(average_hitrate, "FIFO-hitrate-variation-with-skew", "policy", "average hit per-operation")
+        plot_skews(average_hitrate, "FIFO-hitrate-variation-with-skew", "skew-percentage", "average hit per-operation")
 
         ten_hitrate = []
         thirty_hitrate = []
@@ -386,7 +386,7 @@ def main():
         average_hitrate.append(sum(fifty_hitrate)/len(fifty_hitrate))
         average_hitrate.append(sum(seventy_hitrate)/len(seventy_hitrate))
         average_hitrate.append(sum(all_hitrate)/len(all_hitrate))
-        plot_skews(average_hitrate, "CFLRU-hitrate-variation-with-skew", "policy", "average hit per-operation")
+        plot_skews(average_hitrate, "CFLRU-hitrate-variation-with-skew", "skew-percentage", "average hit per-operation")
 
 
 if __name__ == '__main__':
