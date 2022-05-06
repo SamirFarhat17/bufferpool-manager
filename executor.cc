@@ -55,7 +55,7 @@ Buffer *Buffer::getBufferInstance(Simulation_Environment *_env) {
 // search in the bufferpool
 int WorkloadExecutor::search(Buffer* buffer_instance, int pageId, int algorithm) {
     switch (algorithm) {
-		// 1 -> LRU
+		// 1 LRU
 		case 1: {
 			// the bufferpool still empty
 			if(buffer_instance->bufferpool.size() == 0) {
@@ -70,7 +70,7 @@ int WorkloadExecutor::search(Buffer* buffer_instance, int pageId, int algorithm)
 			}
 			break;
 		}
-		// 2 -> LRU_WSR
+		// 2 LRU_WSR
 		case 2: {
 			if(buffer_instance->bufferpool_wsr.size() == 0) {
 				return -1;
@@ -84,7 +84,7 @@ int WorkloadExecutor::search(Buffer* buffer_instance, int pageId, int algorithm)
 			}
 			break;
 		}
-		//  FIFO
+		// 3 FIFO
 		case 3: {
 			// bufferpool is empty
 			if(buffer_instance->bufferpool.size() == 0) {
@@ -127,6 +127,7 @@ int WorkloadExecutor::search(Buffer* buffer_instance, int pageId, int algorithm)
 int WorkloadExecutor::read(Buffer* buffer_instance, int pageId, int algorithm) {
     // TODO
     switch (algorithm) {
+		// 1 LRU
 		case 1: {
 			int cur_size = buffer_instance->bufferpool.size();
 			int capacity = buffer_instance->max_buffer_size;
@@ -179,6 +180,7 @@ int WorkloadExecutor::read(Buffer* buffer_instance, int pageId, int algorithm) {
 			}
 			break;
 		}
+		// 1 LRUWSR
 		case 2: {
 			int cur_size = buffer_instance->bufferpool_wsr.size();
 			int capacity = buffer_instance->max_buffer_size;
@@ -274,7 +276,8 @@ int WorkloadExecutor::read(Buffer* buffer_instance, int pageId, int algorithm) {
 			}
 			break;
 		}
-		case 4:{ //CFLRU
+		// CFLRU
+		case 4:{ 
 			int cur_size = buffer_instance->bufferpool.size();
 			int capacity = buffer_instance->max_buffer_size;
 			int pos = search(buffer_instance, pageId, algorithm);

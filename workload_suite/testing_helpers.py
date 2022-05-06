@@ -29,11 +29,7 @@ def discriminate(filename):
     return True
 
 def discriminate_skew(filename):
-    if int(get_params(filename, "b")) > int(get_params(filename, "n"))/10:
-        return False
-    if get_params(filename, "e") != "5050":
-        return False
-    if  get_params(filename, "s") != "100.000000" and get_params(filename, "s") != "30.000000" and get_params(filename, "s") != "70.000000":
+    if  get_params(filename, "s") != "70.000000" and get_params(filename, "s") != "30.000000" and get_params(filename, "s") != "50.000000" and get_params(filename, "s") != "100.000000" and get_params(filename, "s") != "10.000000":
         return False
     return True
 

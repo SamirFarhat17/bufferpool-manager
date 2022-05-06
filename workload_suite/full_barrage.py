@@ -19,12 +19,12 @@ def main():
     skewed_perct = [90]  # s
     skewed_data_perct = [10]  # d
     algorithm = [1, 2, 3, 4]  # a
-    page_size = [128, 512, 1024, 4096]
+    page_size = [128, 512, 1024, 4096, 8192]
     print(sys.argv[2])
     parameters = [buffer_size, disk_size, num_operations, perct_reads_writes, 
                 skewed_perct, skewed_data_perct, page_size]
-    skew_parameters = [[100], [1500], [3000], [50], 
-                [10, 30, 50, 70,100], [90], [4096]]
+    skew_parameters = [[10, 100, 300], [2000], [5000], [50], 
+                [10, 30, 50, 70, 100], [90], [512, 1024]]
 
     if sys.argv[2] == "all":
         parameters.append(algorithm)
