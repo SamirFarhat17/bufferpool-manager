@@ -16,7 +16,7 @@ def main():
     count = 0
     # initialize parameters of interest
     buffer_size = [100, 250, 500]  # b
-    disk_size = [1500, 3000, 5000, 10000]  # n
+    disk_size = [1500, 5000, 10000]  # n
     num_operations = [1000, 5000, 10000]  # x
     perct_reads_writes = [10, 50, 100]  # e
     skewed_perct = [90]  # s
@@ -28,8 +28,8 @@ def main():
     parameters = [buffer_size, disk_size, num_operations, perct_reads_writes, 
                 skewed_perct, skewed_data_perct, page_size]
     # parameters for skew focused wokloads
-    skew_parameters = [[10, 100, 300], [2000], [5000], [50], 
-                [10, 30, 50, 70, 100], [90], [512, 1024]]
+    skew_parameters = [[10, 100, 300], [1000], [50000], [50], 
+                [10, 30, 50, 70, 100], [90], [512]]
 
     # if all run full barrage
     if sys.argv[2] == "all":
