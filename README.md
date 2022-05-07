@@ -101,7 +101,7 @@ The implementation details can be found in executor.cc and report. The testing r
 
 ## Disclaimer
 
-All team members have tested our program (all replacement algorithms) with different scale of workloads. But in rare cases the program would return segmentation fault on the first few runs. This did not happen for every devices after testing (we tested with 3 devices, only 1 had this issue) so we believe it is not an implementation error. If you encountered this problem when running the program, please try to run a few different commands and return to that command again or contact any team members to solve this issue. 
+All team members have tested this program (all replacement algorithms) with different scale of workloads. But in rare cases the program would return segmentation fault on the first few runs. After testing, we realized that this did not happen to every devices (we have tested with 3 devices, only 1 had this issue) so we believe it is not an implementation error. If you encountered this problem when running the program, please try to run a few different commands and return to that command again or contact any team member to solve this issue. 
 
 ## Contact
 
