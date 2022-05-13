@@ -1,3 +1,0 @@
-b	 n	 x	 e	 e'	 a	 s	 d	 p	 k  
-500	 3000	 5000	 10	 90	 2	 90	 10	 0	 128	
-generation succeed
